@@ -15,6 +15,9 @@ def create_app():
     # Load configuration from Config class (handles DATABASE_URL for Render)
     app.config.from_object(Config)
     
+    # Ensure upload folders are properly set for Render's ephemeral storage
+    app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'uploads')
+    
     # Initialize extensions with app
     db.init_app(app)
     login_manager.init_app(app)
@@ -37,7 +40,6 @@ def create_app():
     def suspect_photo_filter(photo_path):
         if not photo_path:
             return 'img/default_suspect.jpg'
-        # Extract just the filename if full path stored
         filename = photo_path.split('/')[-1].split('\\')[-1]
         return f'uploads/suspects/{filename}'
     
@@ -66,17 +68,22 @@ def create_app():
         db.session.rollback()
         return render_template('errors/500.html'), 500
     
-    # Create tables and seed data
+    # Auto-initialize database on startup (Free Tier Compatible)
     with app.app_context():
-        # Create upload directories (ensure they exist for Render ephemeral storage)
-        os.makedirs('static/uploads/suspects', exist_ok=True)
-        os.makedirs('static/uploads/documents', exist_ok=True)
-        
-        # Create tables
-        db.create_all()
-        
-        # Seed admin and supervisor
-        seed_database()
+        try:
+            # Create upload directories
+            os.makedirs(os.path.join(app.root_path, 'static', 'uploads', 'suspects'), exist_ok=True)
+            os.makedirs(os.path.join(app.root_path, 'static', 'uploads', 'documents'), exist_ok=True)
+            
+            # Create all tables (idempotent - safe to run multiple times)
+            db.create_all()
+            print("✅ Database tables verified/created")
+            
+            # Seed initial data
+            seed_database()
+            
+        except Exception as e:
+            print(f"⚠️  Database initialization warning (may already exist): {e}")
     
     return app
 
@@ -121,7 +128,7 @@ def seed_database():
         db.session.commit()
     except Exception as e:
         db.session.rollback()
-        print(f"⚠️  Database seeding error (may already exist): {e}")
+        print(f"ℹ️  Seeding skipped: {e}")
 
 # Create the Flask application instance
 app = create_app()
