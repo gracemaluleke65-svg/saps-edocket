@@ -1,0 +1,766 @@
+{% extends "base.html" %}
+
+{% block title %}Officer Registration - SAPS eDocket System{% endblock %}
+
+{% block content %}
+<div class="container py-6">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <!-- Registration Header -->
+            <div class="text-center mb-6 animate__animated animate__fadeInDown">
+                <div class="registration-badge mb-3 mx-auto">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h1 class="display-5 fw-bold text-primary mb-3">Officer Registration Portal</h1>
+                <p class="lead text-muted mb-4 mx-auto" style="max-width: 600px;">
+                    Join the SAPS eDocket Management System. Register with your official SAPS credentials 
+                    to access secure case management and advanced investigative tools.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <span class="badge bg-primary-gradient px-3 py-2">
+                        <i class="fas fa-badge-check me-2"></i>SAPS Verified
+                    </span>
+                    <span class="badge bg-gold-gradient px-3 py-2">
+                        <i class="fas fa-shield-alt me-2"></i>Secure Registration
+                    </span>
+                </div>
+            </div>
+
+            <!-- Registration Card -->
+            <div class="card registration-card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeInUp">
+                <div class="card-header bg-primary-gradient py-4">
+                    <div class="d-flex align-items-center">
+                        <div class="header-icon me-3">
+                            <i class="fas fa-id-badge fa-2x"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="mb-1 text-white">Create Your Officer Account</h4>
+                            <p class="text-white-50 mb-0">Official South African Police Service Registration</p>
+                        </div>
+                        <div class="badge-count">
+                            <span class="badge bg-white text-primary px-3 py-2">
+                                Step <span class="step-number">1</span>/2
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-body p-0">
+                    <form method="POST" action="{{ url_for('auth.register') }}" class="needs-validation" novalidate id="registrationForm">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row g-0">
+                            <!-- Left Column - Personal Details -->
+                            <div class="col-lg-6 p-5 border-end">
+                                <h5 class="fw-bold text-primary mb-4 pb-2 border-bottom">
+                                    <i class="fas fa-user-circle me-2"></i>Personal Information
+                                </h5>
+                                
+                                <div class="row g-4">
+                                    <!-- First Name -->
+                                    <div class="col-md-6">
+                                        <div class="form-group floating-form">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-blue-light text-primary">
+                                                    <i class="fas fa-user"></i>
+                                                </span>
+                                                {{ form.first_name(class="form-control floating-input" + (" is-invalid" if form.first_name.errors else ""), 
+                                                   placeholder=" ", id="first_name") }}
+                                                <label for="first_name" class="floating-label">
+                                                    <i class="fas fa-user me-1"></i>First Name
+                                                </label>
+                                                <div class="focus-border"></div>
+                                            </div>
+                                            {% if form.first_name.errors %}
+                                                <div class="invalid-feedback d-block">{{ form.first_name.errors[0] }}</div>
+                                            {% endif %}
+                                            <small class="form-text text-muted mt-1 d-block">Legal first name as per ID</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Last Name -->
+                                    <div class="col-md-6">
+                                        <div class="form-group floating-form">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-blue-light text-primary">
+                                                    <i class="fas fa-user"></i>
+                                                </span>
+                                                {{ form.last_name(class="form-control floating-input" + (" is-invalid" if form.last_name.errors else ""), 
+                                                   placeholder=" ", id="last_name") }}
+                                                <label for="last_name" class="floating-label">
+                                                    <i class="fas fa-user me-1"></i>Last Name
+                                                </label>
+                                                <div class="focus-border"></div>
+                                            </div>
+                                            {% if form.last_name.errors %}
+                                                <div class="invalid-feedback d-block">{{ form.last_name.errors[0] }}</div>
+                                            {% endif %}
+                                            <small class="form-text text-muted mt-1 d-block">Surname</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- ID Number -->
+                                    <div class="col-12">
+                                        <div class="form-group floating-form">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-blue-light text-primary">
+                                                    <i class="fas fa-id-card"></i>
+                                                </span>
+                                                {{ form.id_number(class="form-control floating-input" + (" is-invalid" if form.id_number.errors else ""), 
+                                                   placeholder=" ", id="id_number", maxlength="13") }}
+                                                <label for="id_number" class="floating-label">
+                                                    <i class="fas fa-id-card me-1"></i>South African ID Number
+                                                </label>
+                                                <div class="focus-border"></div>
+                                            </div>
+                                            {% if form.id_number.errors %}
+                                                <div class="invalid-feedback d-block">{{ form.id_number.errors[0] }}</div>
+                                            {% endif %}
+                                            <small class="form-text text-muted mt-1 d-block">
+                                                13-digit South African ID number
+                                                <span class="text-primary" id="idNumberCheck">
+                                                    <i class="fas fa-check-circle ms-2"></i>
+                                                </span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Email Address -->
+                                    <div class="col-12">
+                                        <div class="form-group floating-form">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-blue-light text-primary">
+                                                    <i class="fas fa-envelope"></i>
+                                                </span>
+                                                {{ form.email(class="form-control floating-input" + (" is-invalid" if form.email.errors else ""), 
+                                                   placeholder=" ", id="email") }}
+                                                <label for="email" class="floating-label">
+                                                    <i class="fas fa-envelope me-1"></i>Email Address
+                                                </label>
+                                                <span class="input-group-text bg-blue-light text-primary domain-text">
+                                                    @saps.gov.za
+                                                </span>
+                                                <div class="focus-border"></div>
+                                            </div>
+                                            {% if form.email.errors %}
+                                                <div class="invalid-feedback d-block">{{ form.email.errors[0] }}</div>
+                                            {% endif %}
+                                            <small class="form-text text-muted mt-1 d-block">
+                                                Only official SAPS email addresses are accepted
+                                                <span class="text-success" id="emailCheck">
+                                                    <i class="fas fa-badge-check ms-2"></i>
+                                                </span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right Column - Professional Details -->
+                            <div class="col-lg-6 p-5">
+                                <h5 class="fw-bold text-primary mb-4 pb-2 border-bottom">
+                                    <i class="fas fa-shield-alt me-2"></i>Professional Details
+                                </h5>
+                                
+                                <div class="row g-4">
+                                    <!-- Rank Selection -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label fw-semibold text-dark mb-2">
+                                                <i class="fas fa-star me-1 text-gold"></i>Rank
+                                            </label>
+                                            <div class="select-wrapper">
+                                                {{ form.rank(class="form-select rank-select" + (" is-invalid" if form.rank.errors else "")) }}
+                                                <div class="select-arrow">
+                                                    <i class="fas fa-chevron-down"></i>
+                                                </div>
+                                            </div>
+                                            {% if form.rank.errors %}
+                                                <div class="invalid-feedback d-block">{{ form.rank.errors[0] }}</div>
+                                            {% endif %}
+                                            <small class="form-text text-muted mt-1 d-block">Current SAPS rank</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Station -->
+                                    <div class="col-md-6">
+                                        <div class="form-group floating-form">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-blue-light text-primary">
+                                                    <i class="fas fa-building"></i>
+                                                </span>
+                                                {{ form.station(class="form-control floating-input" + (" is-invalid" if form.station.errors else ""), 
+                                                   placeholder=" ", id="station") }}
+                                                <label for="station" class="floating-label">
+                                                    <i class="fas fa-building me-1"></i>Station
+                                                </label>
+                                                <div class="focus-border"></div>
+                                            </div>
+                                            {% if form.station.errors %}
+                                                <div class="invalid-feedback d-block">{{ form.station.errors[0] }}</div>
+                                            {% endif %}
+                                            <small class="form-text text-muted mt-1 d-block">Your police station</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Password -->
+                                    <div class="col-md-6">
+                                        <div class="form-group floating-form">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-blue-light text-primary">
+                                                    <i class="fas fa-lock"></i>
+                                                </span>
+                                                {{ form.password(class="form-control floating-input" + (" is-invalid" if form.password.errors else ""), 
+                                                   placeholder=" ", id="password", type="password") }}
+                                                <label for="password" class="floating-label">
+                                                    <i class="fas fa-lock me-1"></i>Password
+                                                </label>
+                                                <button type="button" class="btn btn-link text-primary toggle-password" 
+                                                        data-target="#password">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <div class="focus-border"></div>
+                                            </div>
+                                            {% if form.password.errors %}
+                                                <div class="invalid-feedback d-block">{{ form.password.errors[0] }}</div>
+                                            {% endif %}
+                                            
+                                            <!-- Password Strength Meter -->
+                                            <div class="password-strength mt-3">
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <small class="text-muted">Password Strength</small>
+                                                    <small class="text-muted" id="strengthText">Weak</small>
+                                                </div>
+                                                <div class="progress rounded-pill" style="height: 6px;">
+                                                    <div class="progress-bar bg-danger rounded-pill" 
+                                                         id="strengthMeter" 
+                                                         style="width: 20%"></div>
+                                                </div>
+                                                <div class="password-requirements mt-2">
+                                                    <small class="d-block text-muted">
+                                                        <i class="fas fa-check-circle text-success me-1" id="lengthCheck"></i>
+                                                        At least 8 characters
+                                                    </small>
+                                                    <small class="d-block text-muted">
+                                                        <i class="fas fa-check-circle text-success me-1" id="caseCheck"></i>
+                                                        Upper & lowercase letters
+                                                    </small>
+                                                    <small class="d-block text-muted">
+                                                        <i class="fas fa-check-circle text-success me-1" id="numberCheck"></i>
+                                                        Contains a number
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Confirm Password -->
+                                    <div class="col-md-6">
+                                        <div class="form-group floating-form">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-blue-light text-primary">
+                                                    <i class="fas fa-lock"></i>
+                                                </span>
+                                                {{ form.confirm_password(class="form-control floating-input" + (" is-invalid" if form.confirm_password.errors else ""), 
+                                                   placeholder=" ", id="confirm_password", type="password") }}
+                                                <label for="confirm_password" class="floating-label">
+                                                    <i class="fas fa-lock me-1"></i>Confirm Password
+                                                </label>
+                                                <button type="button" class="btn btn-link text-primary toggle-password" 
+                                                        data-target="#confirm_password">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <div class="focus-border"></div>
+                                            </div>
+                                            {% if form.confirm_password.errors %}
+                                                <div class="invalid-feedback d-block">{{ form.confirm_password.errors[0] }}</div>
+                                            {% endif %}
+                                            <div class="match-indicator mt-2" id="passwordMatch">
+                                                <small>
+                                                    <i class="fas fa-times-circle text-danger me-1"></i>
+                                                    Passwords do not match
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Terms & Conditions -->
+                                    <div class="col-12 mt-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="terms" required>
+                                            <label class="form-check-label text-muted" for="terms">
+                                                I agree to the 
+                                                <a href="#" class="text-primary">Terms of Service</a> 
+                                                and confirm that I am an authorized SAPS officer.
+                                                All information provided is accurate and verified.
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Form Actions -->
+                        <div class="card-footer bg-light p-4">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="security-badge me-3">
+                                            <i class="fas fa-shield-check fa-2x text-success"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Secure Registration</h6>
+                                            <small class="text-muted">Encrypted with military-grade security</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex gap-3 justify-content-end">
+                                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary px-4">
+                                            <i class="fas fa-sign-in-alt me-2"></i>Existing Account
+                                        </a>
+                                        <button type="submit" class="btn btn-saps-gradient px-5 py-3" id="registerBtn">
+                                            <span class="btn-content">
+                                                <i class="fas fa-user-plus me-2"></i>Register Officer
+                                            </span>
+                                            <span class="btn-loading" style="display: none;">
+                                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                                Processing...
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Registration Info -->
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="info-card p-4 rounded-3 hover-lift">
+                        <div class="info-icon mb-3">
+                            <i class="fas fa-badge-check text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Auto-Generated Badge</h5>
+                        <p class="text-muted mb-0">Your unique badge number (SAPS-YYYY-XXX) will be automatically generated upon registration.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card p-4 rounded-3 hover-lift">
+                        <div class="info-icon mb-3">
+                            <i class="fas fa-user-shield text-gold"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Role-Based Access</h5>
+                        <p class="text-muted mb-0">Default role assignment with RBAC security ensures appropriate system access levels.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card p-4 rounded-3 hover-lift">
+                        <div class="info-icon mb-3">
+                            <i class="fas fa-database text-primary"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Secure Database</h5>
+                        <p class="text-muted mb-0">Your information is stored securely using SQLAlchemy ORM with encrypted password hashing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Registration Specific Styles */
+    .registration-card {
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        background: linear-gradient(white, white) padding-box,
+                    linear-gradient(135deg, var(--saps-blue), var(--saps-gold)) border-box;
+    }
+    
+    .registration-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 63, 135, 0.15) !important;
+    }
+    
+    .registration-badge {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2.5rem;
+        box-shadow: 0 10px 20px rgba(0, 63, 135, 0.2);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(0, 63, 135, 0.4); }
+        70% { box-shadow: 0 0 0 15px rgba(0, 63, 135, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 63, 135, 0); }
+    }
+    
+    /* Floating Form Styles */
+    .floating-form {
+        position: relative;
+    }
+    
+    .floating-input {
+        padding-top: 1.8rem !important;
+        padding-bottom: 0.8rem !important;
+        height: calc(3.5rem + 2px);
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        background: transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .floating-input:focus {
+        border-color: var(--saps-blue);
+        box-shadow: 0 0 0 0.2rem rgba(0, 63, 135, 0.15);
+        padding-left: 1rem !important;
+    }
+    
+    .floating-label {
+        position: absolute;
+        top: 1rem;
+        left: 3rem;
+        color: #6c757d;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        z-index: 1;
+        background: white;
+        padding: 0 0.5rem;
+    }
+    
+    .floating-input:focus + .floating-label,
+    .floating-input:not(:placeholder-shown) + .floating-label {
+        top: 0.2rem;
+        left: 2.8rem;
+        font-size: 0.8rem;
+        color: var(--saps-blue);
+        font-weight: 500;
+    }
+    
+    .focus-border {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--saps-blue), var(--saps-gold));
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+    
+    .floating-input:focus ~ .focus-border {
+        width: calc(100% - 2rem);
+    }
+    
+    /* Input Group Enhancements */
+    .input-group-text {
+        background: var(--saps-blue-light);
+        border: 2px solid #e0e0e0;
+        border-right: none;
+        color: var(--saps-blue);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .floating-input:focus ~ .input-group-text {
+        border-color: var(--saps-blue);
+        background: var(--saps-blue);
+        color: white;
+    }
+    
+    .domain-text {
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        color: white !important;
+        font-weight: 600;
+        border-left: none !important;
+    }
+    
+    /* Select Wrapper */
+    .select-wrapper {
+        position: relative;
+    }
+    
+    .rank-select {
+        padding: 0.75rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        appearance: none;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .rank-select:focus {
+        border-color: var(--saps-blue);
+        box-shadow: 0 0 0 0.2rem rgba(0, 63, 135, 0.15);
+    }
+    
+    .select-arrow {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--saps-blue);
+        pointer-events: none;
+    }
+    
+    /* Password Strength */
+    .password-strength .progress-bar {
+        transition: width 0.5s ease, background-color 0.5s ease;
+    }
+    
+    .password-requirements small {
+        transition: color 0.3s ease;
+    }
+    
+    .password-requirements .fa-check-circle {
+        transition: color 0.3s ease;
+    }
+    
+    /* Toggle Password */
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        background: none;
+        border: none;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+    }
+    
+    .toggle-password:hover {
+        opacity: 1;
+    }
+    
+    /* Match Indicator */
+    .match-indicator {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    /* Info Cards */
+    .info-card {
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        background: white;
+        transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+        border-color: var(--saps-blue);
+        transform: translateY(-5px);
+    }
+    
+    .info-icon {
+        width: 60px;
+        height: 60px;
+        background: var(--saps-blue-light);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--saps-blue);
+        transition: all 0.3s ease;
+    }
+    
+    .info-card:hover .info-icon {
+        transform: rotate(15deg) scale(1.1);
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        color: white;
+    }
+    
+    /* Button Styles */
+    .btn-saps-gradient {
+        background: linear-gradient(135deg, var(--saps-blue) 0%, var(--saps-blue-dark) 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-saps-gradient::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s;
+    }
+    
+    .btn-saps-gradient:hover::before {
+        left: 100%;
+    }
+    
+    .btn-saps-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 63, 135, 0.3);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .py-6 {
+            padding-top: 3rem !important;
+            padding-bottom: 3rem !important;
+        }
+        
+        .p-5 {
+            padding: 2rem !important;
+        }
+        
+        .border-end {
+            border-right: none !important;
+            border-bottom: 1px solid #dee2e6;
+        }
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        // Password strength checker
+        $('#password').on('input', function() {
+            const password = $(this).val();
+            let strength = 0;
+            
+            // Check password criteria
+            const hasLength = password.length >= 8;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            
+            // Update check icons
+            $('#lengthCheck').toggleClass('text-success', hasLength);
+            $('#caseCheck').toggleClass('text-success', hasUpperCase && hasLowerCase);
+            $('#numberCheck').toggleClass('text-success', hasNumbers);
+            
+            // Calculate strength
+            if (hasLength) strength += 25;
+            if (hasUpperCase && hasLowerCase) strength += 25;
+            if (hasNumbers) strength += 25;
+            if (hasSpecial) strength += 25;
+            
+            // Update strength meter
+            const $meter = $('#strengthMeter');
+            const $text = $('#strengthText');
+            
+            $meter.css('width', strength + '%');
+            
+            if (strength < 50) {
+                $meter.removeClass('bg-warning bg-success').addClass('bg-danger');
+                $text.text('Weak').removeClass('text-warning text-success').addClass('text-danger');
+            } else if (strength < 75) {
+                $meter.removeClass('bg-danger bg-success').addClass('bg-warning');
+                $text.text('Medium').removeClass('text-danger text-success').addClass('text-warning');
+            } else {
+                $meter.removeClass('bg-danger bg-warning').addClass('bg-success');
+                $text.text('Strong').removeClass('text-danger text-warning').addClass('text-success');
+            }
+        });
+        
+        // Password confirmation check
+        $('#confirm_password').on('input', function() {
+            const password = $('#password').val();
+            const confirm = $(this).val();
+            const $indicator = $('#passwordMatch');
+            
+            if (confirm.length > 0) {
+                if (password === confirm) {
+                    $indicator.html('<small><i class="fas fa-check-circle text-success me-1"></i>Passwords match</small>');
+                    $indicator.css('opacity', '1');
+                } else {
+                    $indicator.html('<small><i class="fas fa-times-circle text-danger me-1"></i>Passwords do not match</small>');
+                    $indicator.css('opacity', '1');
+                }
+            } else {
+                $indicator.css('opacity', '0');
+            }
+        });
+        
+        // ID number validation
+        $('#id_number').on('input', function() {
+            const idNumber = $(this).val();
+            const $check = $('#idNumberCheck');
+            
+            if (idNumber.length === 13 && /^\d+$/.test(idNumber)) {
+                $check.html('<i class="fas fa-check-circle text-success me-2"></i>Valid ID format');
+            } else if (idNumber.length > 0) {
+                $check.html('<i class="fas fa-exclamation-circle text-warning me-2"></i>Must be 13 digits');
+            } else {
+                $check.html('<i class="fas fa-check-circle me-2" style="opacity: 0.3"></i>');
+            }
+        });
+        
+        // Email validation
+        $('#email').on('input', function() {
+            const email = $(this).val();
+            const $check = $('#emailCheck');
+            
+            if (email.length > 0) {
+                $check.html('<i class="fas fa-badge-check text-success me-2"></i>SAPS domain will be added');
+            } else {
+                $check.html('<i class="fas fa-badge-check me-2" style="opacity: 0.3"></i>');
+            }
+        });
+        
+        // Toggle password visibility
+        $('.toggle-password').click(function() {
+            const target = $(this).data('target');
+            const $input = $(target);
+            const $icon = $(this).find('i');
+            
+            if ($input.attr('type') === 'password') {
+                $input.attr('type', 'text');
+                $icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                $input.attr('type', 'password');
+                $icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+        
+        // Form submission with loading state
+        $('#registrationForm').on('submit', function() {
+            const $btn = $('#registerBtn');
+            $btn.prop('disabled', true);
+            $btn.find('.btn-content').hide();
+            $btn.find('.btn-loading').show();
+            $btn.css('opacity', '0.8');
+        });
+        
+        // Add floating label functionality
+        $('.floating-input').each(function() {
+            if ($(this).val()) {
+                $(this).addClass('has-value');
+            }
+        });
+        
+        $('.floating-input').on('blur', function() {
+            if ($(this).val()) {
+                $(this).addClass('has-value');
+            } else {
+                $(this).removeClass('has-value');
+            }
+        });
+        
+        // Animate form elements on load
+        $('.floating-form').each(function(index) {
+            $(this).css('animation-delay', (index * 0.1) + 's');
+        });
+    });
+</script>
+{% endblock %}

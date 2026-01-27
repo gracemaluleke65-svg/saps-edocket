@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SAPS eDocket Management System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --saps-blue: #003f87;       /* Official SAPS Blue */
+            --saps-blue-dark: #002d62;
+            --saps-blue-light: #e6f0ff;
+            --saps-gold: #d4af37;       /* Official SAPS Gold */
+            --saps-green: #006400;      /* Aloe Green */
+            --saps-red: #dc143c;        /* Aloe Flowers Red */
+            --saps-white: #ffffff;
+            --saps-black: #1a1a1a;
+            --saps-gray: #f8f9fc;
+            --saps-gray-dark: #495057;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Professional Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--saps-blue) 0%, var(--saps-blue-dark) 100%);
+            box-shadow: 0 4px 20px rgba(0, 63, 135, 0.15);
+            border-bottom: 3px solid var(--saps-gold);
+            padding: 0.8rem 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .navbar-brand {
+            font-family: 'Merriweather', serif;
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--saps-white) !important;
+            letter-spacing: -0.5px;
+            position: relative;
+            padding-left: 50px;
+        }
+        
+        .navbar-brand::before {
+            content: '★';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--saps-gold);
+            font-size: 2rem;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+        
+        .navbar-brand small {
+            font-size: 0.7rem;
+            color: var(--saps-gold);
+            display: block;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+            margin-top: -2px;
+        }
+        
+        .nav-item {
+            margin: 0 3px;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.6rem 1.2rem !important;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+        
+        .nav-link:hover::before {
+            left: 100%;
+        }
+        
+        .nav-link:hover {
+            color: var(--saps-gold) !important;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--saps-gold) !important;
+            border-left: 3px solid var(--saps-gold);
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        /* User dropdown */
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--saps-gold) 0%, #e6c341 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--saps-blue);
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            border-top: 3px solid var(--saps-gold);
+        }
+        
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s;
+            color: var(--saps-black);
+        }
+        
+        .dropdown-item:hover {
+            background: var(--saps-blue-light);
+            color: var(--saps-blue);
+            padding-left: 1.8rem;
+        }
+        
+        /* Professional Cards */
+        .stats-card {
+            background: var(--saps-white);
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 63, 135, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+            padding: 1.5rem;
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--saps-blue), var(--saps-gold));
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 63, 135, 0.15);
+        }
+        
+        .stats-card .icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            background: var(--saps-blue-light);
+            color: var(--saps-blue);
+            transition: all 0.3s;
+        }
+        
+        .stats-card:hover .icon {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+            color: var(--saps-white);
+        }
+        
+        /* Case Cards */
+        .case-card {
+            background: var(--saps-white);
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 1.5rem;
+            border-left: 5px solid var(--saps-blue);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .case-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(0, 63, 135, 0.05) 0%, transparent 100%);
+            border-radius: 50%;
+        }
+        
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 63, 135, 0.15);
+            border-left-color: var(--saps-gold);
+        }
+        
+        /* Status Badges - Professional */
+        .status-badge {
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .status-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-open { 
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #1565c0;
+            border-color: #90caf9;
+        }
+        .status-investigating { 
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            color: #e65100;
+            border-color: #ffb74d;
+        }
+        .status-in_court { 
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            color: #7b1fa2;
+            border-color: #ce93d8;
+        }
+        .status-closed { 
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+            border-color: #a5d6a7;
+        }
+        .status-archived { 
+            background: linear-gradient(135deg, #eceff1, #cfd8dc);
+            color: #455a64;
+            border-color: #b0bec5;
+        }
+        
+        /* Professional Buttons */
+        .btn-saps {
+            background: linear-gradient(135deg, var(--saps-blue) 0%, var(--saps-blue-dark) 100%);
+            color: var(--saps-white);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-saps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-saps:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-saps:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 63, 135, 0.3);
+        }
+        
+        .btn-saps:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-saps-gold {
+            background: linear-gradient(135deg, var(--saps-gold) 0%, #c9a227 100%);
+            color: var(--saps-black);
+        }
+        
+        .btn-saps-gold:hover {
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* Form Controls */
+        .form-control, .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--saps-blue);
+            box-shadow: 0 0 0 0.25rem rgba(0, 63, 135, 0.15);
+            transform: translateY(-1px);
+        }
+        
+        /* Modern Alerts */
+        .alert {
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-left-color: #4caf50;
+        }
+        
+        .alert-danger {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            border-left-color: #f44336;
+        }
+        
+        .alert-warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-left-color: #ff9800;
+        }
+        
+        /* Professional Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--saps-blue) 0%, var(--saps-blue-dark) 100%);
+            color: var(--saps-white);
+            padding: 2rem 0;
+            margin-top: auto;
+            border-top: 3px solid var(--saps-gold);
+        }
+        
+        .footer-brand {
+            font-family: 'Merriweather', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+            margin: 0 1rem;
+        }
+        
+        .footer-links a:hover {
+            color: var(--saps-gold);
+            transform: translateY(-2px);
+        }
+        
+        /* Badge for rank/role */
+        .rank-badge {
+            background: linear-gradient(135deg, var(--saps-gold), #c9a227);
+            color: var(--saps-blue-dark);
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Loading indicator */
+        .loading-dots {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            margin: 0 3px;
+            background: var(--saps-blue);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+        
+        /* SAPS Brand Pattern */
+        .saps-pattern {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 200px;
+            height: 200px;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.4rem;
+                padding-left: 40px;
+            }
+            
+            .nav-link {
+                padding: 0.5rem 1rem !important;
+                margin-bottom: 5px;
+            }
+            
+            .stats-card, .case-card {
+                padding: 1.2rem;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            .navbar, .footer {
+                display: none;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+   <!-- NAVBAR - Always Visible -->
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">
+            SAPS<br><small>eDocket System</small>
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <!-- Dashboard Link -->
+                <li class="nav-item">
+                    {% if current_user.is_authenticated %}
+                    <a class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}" 
+                       href="{{ url_for('main.dashboard') }}">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a>
+                    {% else %}
+                    <a class="nav-link disabled-guest" href="{{ url_for('auth.login') }}" 
+                       onclick="event.preventDefault(); window.location.href='{{ url_for('auth.login') }}';">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a>
+                    {% endif %}
+                </li>
+                
+                <!-- Cases Link -->
+                <li class="nav-item">
+                    {% if current_user.is_authenticated %}
+                    <a class="nav-link {% if request.endpoint.startswith('cases') and request.endpoint != 'cases.create_case' %}active{% endif %}" 
+                       href="{{ url_for('cases.view_cases') }}">
+                        <i class="fas fa-gavel"></i> Cases
+                    </a>
+                    {% else %}
+                    <a class="nav-link disabled-guest" href="{{ url_for('auth.login') }}">
+                        <i class="fas fa-gavel"></i> Cases
+                    </a>
+                    {% endif %}
+                </li>
+                
+                <!-- New Case Link -->
+                <li class="nav-item">
+                    {% if current_user.is_authenticated %}
+                    <a class="nav-link {% if request.endpoint == 'cases.create_case' %}active{% endif %}" 
+                       href="{{ url_for('cases.create_case') }}">
+                        <i class="fas fa-plus-circle"></i> New Case
+                    </a>
+                    {% else %}
+                    <a class="nav-link disabled-guest" href="{{ url_for('auth.login') }}">
+                        <i class="fas fa-plus-circle"></i> New Case
+                    </a>
+                    {% endif %}
+                </li>
+                
+                <!-- Search Link -->
+               
+                
+                <!-- Suspects Link -->
+                <li class="nav-item">
+                    {% if current_user.is_authenticated %}
+                    <a class="nav-link {% if request.endpoint == 'suspects.search_suspects' %}active{% endif %}" 
+                       href="{{ url_for('suspects.search_suspects') }}">
+                        <i class="fas fa-user-secret"></i>Find Suspects
+                    </a>
+                    {% else %}
+                    <a class="nav-link disabled-guest" href="{{ url_for('auth.login') }}">
+                        <i class="fas fa-user-secret"></i>Find Suspects
+                    </a>
+                    {% endif %}
+                </li>
+                
+                <!-- Admin Dropdown (Only for authenticated admin/supervisor) -->
+                {% if current_user.is_authenticated and current_user.role in ['admin', 'supervisor'] %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-cogs"></i> Admin
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><h6 class="dropdown-header">System Administration</h6></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-users-cog"></i> Officer Management</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-chart-bar"></i> Analytics & Reports</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-database"></i> Database Tools</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-shield-alt"></i> System Audit</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            
+            <ul class="navbar-nav ms-auto">
+                {% if current_user.is_authenticated %}
+                <!-- Authenticated User Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                        <div class="user-avatar me-2">
+                            {{ current_user.first_name[0] }}{{ current_user.last_name[0] }}
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fw-semibold">{{ current_user.full_name }}</span>
+                            <small class="d-flex align-items-center">
+                                <span class="rank-badge me-2">{{ current_user.rank|title if current_user.rank else current_user.role|title }}</span>
+                                <i class="fas fa-badge-check text-info"></i>
+                            </small>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><h6 class="dropdown-header">Officer Profile</h6></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-id-badge"></i> Badge: {{ current_user.badge_number }}</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-shield"></i> Rank: {{ current_user.rank|title }}</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-building"></i> Station: {{ current_user.station }}</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog"></i> Account Settings</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-history"></i> Activity Log</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}">
+                            <i class="fas fa-sign-out-alt"></i> Logout Session
+                        </a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <!-- Guest User - Login/Register Buttons -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.register') }}">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+    <main class="flex-grow-1 position-relative">
+        <!-- SAPS Brand Pattern -->
+        <div class="saps-pattern">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="100,20 120,60 160,60 130,85 140,125 100,100 60,125 70,85 40,60 80,60" 
+                        fill="var(--saps-blue)" />
+            </svg>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mt-4">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show shadow-lg">
+                            <div class="d-flex align-items-center">
+                                <div class="alert-icon me-3">
+                                    <i class="fas fa-{% if category == 'success' %}check-circle{% elif category in ['error', 'danger'] %}exclamation-triangle{% else %}info-circle{% endif %} fa-2x"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h5 class="alert-heading mb-1">
+                                        {% if category == 'success' %}Success!
+                                        {% elif category == 'error' or category == 'danger' %}Alert!
+                                        {% elif category == 'warning' %}Warning!
+                                        {% else %}Notice!{% endif %}
+                                    </h5>
+                                    <p class="mb-0">{{ message }}</p>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
+                    <div class="footer-brand">SAPS eDocket System</div>
+                    <p class="mb-0 small opacity-75">Securing Justice, One Digital Docket at a Time</p>
+                </div>
+                
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <div class="footer-links">
+                        <a href="#" class="mb-2 mb-md-0"><i class="fas fa-shield-alt me-1"></i> Security Policy</a>
+                        <a href="#" class="mb-2 mb-md-0"><i class="fas fa-file-contract me-1"></i> Terms of Use</a>
+                        <a href="#" class="mb-2 mb-md-0"><i class="fas fa-question-circle me-1"></i> Help Center</a>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 text-center text-md-end">
+                    <small class="opacity-75">
+                        <i class="fas fa-badge-check text-warning me-1"></i>
+                        Certified SAPS System v1.0<br>
+                        <span class="text-warning">Badge #{{ current_user.badge_number if current_user.is_authenticated else 'N/A' }}</span>
+                    </small>
+                </div>
+            </div>
+            
+            <hr class="my-3 opacity-25">
+            
+            <div class="row">
+                <div class="col-12 text-center">
+                    <small class="opacity-75">
+                        &copy; 2024 South African Police Service - eDocket Management System<br>
+                        <span class="text-warning fst-italic">Official Government System - Classified Information</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Add active state to current page
+        $(document).ready(function() {
+            $('.nav-link').each(function() {
+                if ($(this).attr('href') === window.location.pathname) {
+                    $(this).addClass('active');
+                }
+            });
+            
+            // Add smooth scrolling
+            $('a[href^="#"]').on('click', function(e) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $($(this).attr('href')).offset().top - 80
+                }, 500);
+            });
+            
+            // Auto-dismiss alerts after 5 seconds
+            setTimeout(function() {
+                $('.alert').alert('close');
+            }, 5000);
+            
+            // Add subtle animations to cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all cards
+            document.querySelectorAll('.stats-card, .case-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
