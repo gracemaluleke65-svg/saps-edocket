@@ -101,3 +101,10 @@ static/uploads/*
 
 # Local config
 config.local.py
+
+# ============================================
+# EXCEPTIONS – include static/lib
+# ============================================
+# Force Git to include the entire static/lib folder
+!static/lib/
+!static/lib/**
