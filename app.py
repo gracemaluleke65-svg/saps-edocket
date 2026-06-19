@@ -1,13 +1,10 @@
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
 from datetime import datetime
 import os
 from config import Config
 
-# Initialize extensions
-db = SQLAlchemy()
-login_manager = LoginManager()
+# Import db and login_manager from extensions
+from extensions import db, login_manager
 
 def create_app():
     app = Flask(__name__)

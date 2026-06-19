@@ -1,99 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Officer Login - SAPS eDocket System{% endblock %}
+{% block title %}Officer Login – SAPS eDocket{% endblock %}
+
+{% block page_header %}
+<div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
+    <div class="row py-5">
+        <div class="col-12 pt-lg-5 mt-lg-5 text-center">
+            <h1 class="display-4 text-white animated zoomIn">Officer Login</h1>
+            <a href="{{ url_for('main.index') }}" class="h5 text-white">Home</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="#" class="h5 text-white">Login</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-8 min-vh-100 d-flex align-items-center justify-content-center">
-    <!-- Animated Background Elements -->
-    <div class="position-absolute top-0 end-0 w-50 h-100 d-none d-lg-block">
-        <div class="position-absolute top-0 end-0 w-100 h-100" style="background: radial-gradient(circle at 80% 50%, rgba(0, 63, 135, 0.03) 0%, transparent 50%);"></div>
-    </div>
-    
-    <div class="row justify-content-center align-items-center w-100">
-        <!-- Left Side - Welcome/Info -->
-        <div class="col-lg-5 d-none d-lg-block">
-            <div class="pe-lg-5">
-                <div class="mb-5">
-                    <h1 class="display-5 fw-bold text-primary mb-3">
-                        Welcome Back,<br>
-                        <span class="text-gradient-gold">Officer</span>
-                    </h1>
-                    <p class="lead text-dark mb-4">
-                        Access the SAPS eDocket Management System with secure, role-based authentication.
-                        Log in with your official @saps.gov.za credentials.
-                    </p>
-                </div>
-                
-                <!-- Features List -->
-                <div class="feature-list">
-                    <div class="feature-item d-flex align-items-start mb-4 hover-scale">
-                        <div class="feature-icon me-3">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-2">Secure Authentication</h5>
-                            <p class="text-muted mb-0">Advanced encryption and session management for maximum security.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item d-flex align-items-start mb-4 hover-scale">
-                        <div class="feature-icon me-3">
-                            <i class="fas fa-badge-check"></i>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-2">Role-Based Access</h5>
-                            <p class="text-muted mb-0">Officer, Supervisor, and Admin roles with appropriate permissions.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item d-flex align-items-start mb-4 hover-scale">
-                        <div class="feature-icon me-3">
-                            <i class="fas fa-history"></i>
-                        </div>
-                        <div>
-                            <h5 class="fw-bold mb-2">Activity Tracking</h5>
-                            <p class="text-muted mb-0">All logins are logged for security auditing and monitoring.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Demo Credentials -->
-                <div class="alert alert-light border-start border-4 border-primary shadow-sm">
-                    <h6 class="fw-bold text-primary mb-2">
-                        <i class="fas fa-key me-2"></i>Demo Credentials
-                    </h6>
-                    <div class="row g-2 small">
-                        <div class="col-6">
-                            <span class="text-muted">Admin:</span><br>
-                            <code class="text-primary">admin@saps.gov.za</code>
-                        </div>
-                        <div class="col-6">
-                            <span class="text-muted">Supervisor:</span><br>
-                            <code class="text-primary">supervisor@saps.gov.za</code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Right Side - Login Card -->
-        <div class="col-lg-4 col-md-8">
-            <div class="login-card position-relative">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8">
+            <div class="login-card">
                 <!-- Card Background Pattern -->
                 <div class="card-bg-pattern"></div>
                 
                 <!-- Main Card -->
                 <div class="card border-0 shadow-lg rounded-4 overflow-hidden hover-3d">
-                    <div class="card-header bg-primary-gradient py-5 text-center position-relative overflow-hidden">
-                        <!-- Animated Background -->
+                    <div class="card-header bg-primary-gradient py-4 text-center position-relative overflow-hidden">
                         <div class="position-absolute top-0 start-0 w-100 h-100 bg-pattern-animated"></div>
-                        
                         <div class="position-relative z-2">
                             <div class="login-icon mx-auto mb-3">
                                 <i class="fas fa-shield-alt"></i>
                             </div>
-                            <h3 class="text-white fw-bold mb-1">Officer Portal</h3>
-                            <p class="text-white-50 mb-0">SAPS eDocket Management System</p>
+                            <h4 class="text-white fw-bold mb-1">Officer Portal</h4>
+                            <p class="text-white-50 mb-0">SAPS eDocket Management</p>
                         </div>
                     </div>
                     
@@ -101,11 +40,10 @@
                         <form method="POST" action="{{ url_for('auth.login') }}" class="needs-validation" novalidate>
                             {{ form.hidden_tag() }}
                             
-                            <!-- Email Input -->
+                            <!-- Email -->
                             <div class="mb-4">
                                 <label class="form-label fw-semibold mb-2">
-                                    <i class="fas fa-envelope text-primary me-2"></i>
-                                    SAPS Email Address
+                                    <i class="fas fa-envelope text-primary me-2"></i>SAPS Email
                                 </label>
                                 <div class="input-group input-group-lg">
                                     <span class="input-group-text bg-blue-light border-end-0">
@@ -113,25 +51,20 @@
                                     </span>
                                     {{ form.email(class="form-control form-control-lg" + (" is-invalid" if form.email.errors else ""), 
                                        placeholder="you@saps.gov.za", required=true) }}
-                                    <div class="valid-feedback">
-                                        <i class="fas fa-check-circle text-success me-1"></i> Valid SAPS email
-                                    </div>
+                                    <div class="valid-feedback"><i class="fas fa-check-circle text-success me-1"></i> Valid SAPS email</div>
                                     {% if form.email.errors %}
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle me-1"></i> {{ form.email.errors[0] }}
-                                        </div>
+                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle me-1"></i> {{ form.email.errors[0] }}</div>
                                     {% endif %}
                                 </div>
                                 <small class="text-muted mt-1 d-block">
-                                    <i class="fas fa-info-circle me-1"></i> Must be an official @saps.gov.za email
+                                    <i class="fas fa-info-circle me-1"></i> Official @saps.gov.za domain required
                                 </small>
                             </div>
                             
-                            <!-- Password Input -->
+                            <!-- Password -->
                             <div class="mb-4">
                                 <label class="form-label fw-semibold mb-2">
-                                    <i class="fas fa-lock text-primary me-2"></i>
-                                    Password
+                                    <i class="fas fa-lock text-primary me-2"></i>Password
                                 </label>
                                 <div class="input-group input-group-lg">
                                     <span class="input-group-text bg-blue-light border-end-0">
@@ -143,17 +76,15 @@
                                         <i class="fas fa-eye"></i>
                                     </button>
                                     {% if form.password.errors %}
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle me-1"></i> {{ form.password.errors[0] }}
-                                        </div>
+                                        <div class="invalid-feedback"><i class="fas fa-exclamation-circle me-1"></i> {{ form.password.errors[0] }}</div>
                                     {% endif %}
                                 </div>
                                 <small class="text-muted mt-1 d-block">
-                                    <i class="fas fa-shield-alt me-1"></i> Passwords are encrypted and never stored in plain text
+                                    <i class="fas fa-shield-alt me-1"></i> Encrypted & secure
                                 </small>
                             </div>
                             
-                            <!-- Remember Me & Forgot Password -->
+                            <!-- Remember & Forgot -->
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="form-check">
                                     {{ form.remember(class="form-check-input", id="rememberMe") }}
@@ -166,27 +97,21 @@
                                 </a>
                             </div>
                             
-                            <!-- Submit Button -->
-                            <div class="mb-4">
-                                <button type="submit" class="btn btn-saps btn-lg w-100 py-3 position-relative overflow-hidden">
-                                    <div class="position-absolute top-50 start-50 translate-middle btn-ripple"></div>
-                                    <span class="position-relative z-2">
-                                        <i class="fas fa-sign-in-alt me-2"></i> Login to Dashboard
-                                    </span>
-                                </button>
-                            </div>
+                            <!-- Submit -->
+                            <button type="submit" class="btn btn-saps btn-lg w-100 py-3 position-relative overflow-hidden">
+                                <span class="position-relative z-2">
+                                    <i class="fas fa-sign-in-alt me-2"></i> Login
+                                </span>
+                            </button>
                             
                             <!-- Security Notice -->
-                            <div class="alert alert-light border border-light rounded-3 text-center p-3 mb-0">
+                            <div class="alert alert-light border border-light rounded-3 text-center p-3 mt-4 mb-0">
                                 <i class="fas fa-lock text-primary me-2"></i>
-                                <small class="text-muted">
-                                    This is a secure SAPS system. All activities are monitored and logged.
-                                </small>
+                                <small class="text-muted">This is a secure SAPS system. All activities are monitored.</small>
                             </div>
                         </form>
                     </div>
                     
-                    <!-- Card Footer -->
                     <div class="card-footer bg-light py-3 text-center">
                         <p class="mb-0 small text-muted">
                             <i class="fas fa-user-plus me-1"></i>
@@ -197,216 +122,83 @@
                         </p>
                     </div>
                 </div>
-                
-                <!-- Floating Badge -->
-                <div class="floating-badge position-absolute bottom-0 end-0 translate-middle-y">
-                    <div class="badge-bg bg-gold-gradient rounded-circle p-3 shadow">
-                        <i class="fas fa-badge-check fa-2x text-white"></i>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-    /* Login Page Specific Styles */
-    .min-vh-100 {
-        min-height: 100vh;
-    }
-    
-    .py-8 {
-        padding-top: 6rem !important;
-        padding-bottom: 6rem !important;
-    }
-    
-    /* Login Card */
-    .login-card {
-        position: relative;
-    }
-    
-    .card-bg-pattern {
-        position: absolute;
-        top: -20px;
-        left: -20px;
-        right: -20px;
-        bottom: -20px;
-        background: linear-gradient(45deg, 
-            rgba(0, 63, 135, 0.05) 0%, 
-            rgba(212, 175, 55, 0.03) 50%, 
-            rgba(0, 63, 135, 0.05) 100%);
-        border-radius: 30px;
-        z-index: -1;
-        opacity: 0;
-        transition: opacity 0.5s ease;
-    }
-    
-    .login-card:hover .card-bg-pattern {
-        opacity: 1;
-    }
-    
-    /* Header Background */
     .bg-primary-gradient {
-        background: linear-gradient(135deg, var(--saps-blue) 0%, var(--saps-blue-dark) 100%) !important;
+        background: linear-gradient(135deg, var(--saps-blue, #003f87) 0%, var(--saps-blue-dark, #002b5c) 100%) !important;
     }
-    
     .bg-pattern-animated {
-        background: linear-gradient(45deg, 
-            transparent 25%, 
-            rgba(255, 255, 255, 0.1) 25%, 
-            rgba(255, 255, 255, 0.1) 50%, 
-            transparent 50%, 
-            transparent 75%, 
-            rgba(255, 255, 255, 0.1) 75%, 
-            rgba(255, 255, 255, 0.1)
-        );
+        background: linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0.1) 50%, transparent 50%, transparent 75%, rgba(255,255,255,0.1) 75%);
         background-size: 20px 20px;
         animation: pattern-slide 20s linear infinite;
     }
-    
     @keyframes pattern-slide {
         0% { background-position: 0 0; }
         100% { background-position: 40px 40px; }
     }
-    
-    /* Login Icon */
     .login-icon {
-        width: 80px;
-        height: 80px;
-        background: rgba(255, 255, 255, 0.2);
+        width: 70px;
+        height: 70px;
+        background: rgba(255,255,255,0.2);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
-        color: white;
-        border: 3px solid rgba(255, 255, 255, 0.3);
+        font-size: 1.8rem;
+        color: #fff;
+        border: 3px solid rgba(255,255,255,0.3);
         transition: all 0.3s ease;
+        margin: 0 auto;
     }
-    
     .login-card:hover .login-icon {
         transform: rotate(15deg) scale(1.1);
-        background: rgba(255, 255, 255, 0.3);
+        background: rgba(255,255,255,0.3);
     }
-    
-    /* Input Group Enhancement */
-    .input-group-lg > .form-control,
-    .input-group-lg > .input-group-text {
+    .input-group-lg > .form-control, .input-group-lg > .input-group-text {
         padding: 0.875rem 1rem;
         font-size: 1rem;
     }
-    
     .input-group-text {
-        background: var(--saps-blue-light);
+        background: #e9f0f7;
         border-color: #dee2e6;
         transition: all 0.3s ease;
     }
-    
     .input-group:focus-within .input-group-text {
-        background: var(--saps-blue);
-        color: white;
-        border-color: var(--saps-blue);
+        background: var(--saps-blue, #003f87);
+        color: #fff;
+        border-color: var(--saps-blue, #003f87);
     }
-    
-    /* Form Control Focus States */
     .form-control-lg:focus {
-        border-color: var(--saps-blue);
-        box-shadow: 0 0 0 0.25rem rgba(0, 63, 135, 0.25);
+        border-color: var(--saps-blue, #003f87);
+        box-shadow: 0 0 0 0.25rem rgba(0,63,135,0.25);
         transform: translateY(-1px);
     }
-    
-    /* Password Toggle Button */
     #togglePassword {
         border-color: #dee2e6;
         border-left: 0;
         transition: all 0.2s ease;
     }
-    
     #togglePassword:hover {
-        background: var(--saps-blue-light);
-        color: var(--saps-blue);
-        border-color: var(--saps-blue);
+        background: #e9f0f7;
+        color: var(--saps-blue, #003f87);
+        border-color: var(--saps-blue, #003f87);
     }
-    
-    /* Feature Items */
-    .feature-list {
-        margin-top: 2rem;
-    }
-    
-    .feature-item {
-        padding: 1rem;
-        border-radius: 12px;
-        cursor: default;
-        transition: all 0.3s ease;
-    }
-    
-    .feature-item:hover {
-        background: rgba(0, 63, 135, 0.03);
-        transform: translateX(10px);
-    }
-    
-    .feature-item .feature-icon {
-        width: 50px;
-        height: 50px;
-        background: var(--saps-blue-light);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-        color: var(--saps-blue);
-        flex-shrink: 0;
-        transition: all 0.3s ease;
-    }
-    
-    .feature-item:hover .feature-icon {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        transform: rotate(5deg);
-    }
-    
-    /* Button Ripple Effect */
-    .btn-ripple {
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-    }
-    
-    .btn-ripple.animate {
-        width: 300px;
-        height: 300px;
-    }
-    
-    /* Floating Badge */
-    .floating-badge {
-        animation: float 4s ease-in-out infinite;
-        z-index: 5;
-    }
-    
-    .badge-bg {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    /* Hover Effects */
     .hover-3d {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
         transform-style: preserve-3d;
     }
-    
     .hover-3d:hover {
         transform: translateY(-8px) rotateX(2deg) rotateY(-2deg);
-        box-shadow: 0 25px 50px rgba(0, 63, 135, 0.15) !important;
+        box-shadow: 0 25px 50px rgba(0,63,135,0.15) !important;
     }
-    
     .hover-underline {
         position: relative;
+        text-decoration: none;
     }
-    
     .hover-underline::after {
         content: '';
         position: absolute;
@@ -414,58 +206,47 @@
         left: 0;
         width: 0;
         height: 2px;
-        background: var(--saps-blue);
+        background: var(--saps-blue, #003f87);
         transition: width 0.3s ease;
     }
-    
     .hover-underline:hover::after {
         width: 100%;
     }
-    
-    .hover-scale {
-        transition: transform 0.3s ease;
+    .btn-saps {
+        background: linear-gradient(135deg, var(--saps-blue, #003f87), var(--saps-blue-dark, #002b5c));
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
-    
-    .hover-scale:hover {
-        transform: scale(1.02);
+    .btn-saps:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,63,135,0.3);
+        color: #fff;
     }
-    
-    /* Text Gradient */
-    .text-gradient-gold {
-        background: linear-gradient(135deg, var(--saps-gold) 0%, #c9a227 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+    .btn-saps:active {
+        transform: translateY(0);
     }
-    
-    /* Alert Styling */
-    .alert-light {
-        background: rgba(248, 249, 252, 0.8);
-        backdrop-filter: blur(10px);
+    .card-bg-pattern {
+        position: absolute;
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+        background: linear-gradient(45deg, rgba(0,63,135,0.05) 0%, rgba(212,175,55,0.03) 50%, rgba(0,63,135,0.05) 100%);
+        border-radius: 30px;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.5s ease;
     }
-    
-    /* Responsive Adjustments */
-    @media (max-width: 992px) {
-        .py-8 {
-            padding-top: 4rem !important;
-            padding-bottom: 4rem !important;
-        }
-        
-        .d-none.d-lg-block {
-            display: none !important;
-        }
-        
-        .col-lg-4 {
-            max-width: 450px;
-            margin: 0 auto;
-        }
+    .login-card:hover .card-bg-pattern {
+        opacity: 1;
     }
-    
     @media (max-width: 576px) {
         .card-body {
             padding: 2rem !important;
         }
-        
         .input-group-lg > .form-control,
         .input-group-lg > .input-group-text {
             padding: 0.75rem 0.875rem;
@@ -475,15 +256,12 @@
 
 <script>
     $(document).ready(function() {
-        // Password visibility toggle
         $('#togglePassword').click(function() {
-            const passwordInput = $('#passwordInput');
-            const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
-            passwordInput.attr('type', type);
+            const input = $('#passwordInput');
+            const type = input.attr('type') === 'password' ? 'text' : 'password';
+            input.attr('type', type);
             $(this).find('i').toggleClass('fa-eye fa-eye-slash');
         });
-        
-        // Real-time email validation
         $('#email').on('input', function() {
             const email = $(this).val();
             if (email.endsWith('@saps.gov.za')) {
@@ -492,8 +270,6 @@
                 $(this).removeClass('is-valid');
             }
         });
-        
-        // Form validation
         $('form').on('submit', function(e) {
             if (!this.checkValidity()) {
                 e.preventDefault();
@@ -501,32 +277,7 @@
             }
             $(this).addClass('was-validated');
         });
-        
-        // Button ripple effect
-        $('.btn-saps').on('click', function(e) {
-            const btn = $(this);
-            const x = e.pageX - btn.offset().left;
-            const y = e.pageY - btn.offset().top;
-            
-            btn.find('.btn-ripple').css({
-                left: x,
-                top: y
-            }).addClass('animate');
-            
-            setTimeout(() => {
-                btn.find('.btn-ripple').removeClass('animate');
-            }, 600);
-        });
-        
-        // Add floating animation to feature items
-        $('.feature-item').each(function(index) {
-            $(this).css('animation-delay', (index * 0.1) + 's');
-        });
-        
-        // Auto-focus on email field
-        setTimeout(() => {
-            $('#email').focus();
-        }, 500);
+        setTimeout(() => $('#email').focus(), 500);
     });
 </script>
 {% endblock %}

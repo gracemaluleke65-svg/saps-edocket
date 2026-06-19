@@ -1,333 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Case {{ case.case_number }} - SAPS eDocket{% endblock %}
+{% block title %}Case {{ case.case_number }} – SAPS eDocket{% endblock %}
 
-{% block extra_css %}
-<style>
-    /* Case View Specific Styles */
-    .case-header {
-        background: linear-gradient(135deg, var(--saps-blue-light), #e6f0ff);
-        border-radius: 20px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
-        border: 1px solid rgba(0, 63, 135, 0.1);
-    }
-    
-    .case-header::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 200px;
-        height: 200px;
-        background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
-        border-radius: 50%;
-        transform: translate(100px, -100px);
-    }
-    
-    .case-number-badge {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        font-family: 'Courier New', monospace;
-        font-weight: 700;
-        padding: 0.5rem 1.2rem;
-        border-radius: 10px;
-        display: inline-block;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 4px 15px rgba(0, 63, 135, 0.2);
-        transition: all 0.3s;
-    }
-    
-    .case-number-badge:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 63, 135, 0.3);
-    }
-    
-    .priority-indicator {
-        position: relative;
-        padding-left: 1.5rem;
-    }
-    
-    .priority-indicator::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        animation: pulse 2s infinite;
-    }
-    
-    .priority-high::before { background: #dc3545; }
-    .priority-medium::before { background: #ffc107; }
-    .priority-low::before { background: #28a745; }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
-        50% { opacity: 0.7; transform: translateY(-50%) scale(1.1); }
-    }
-    
-    /* Case Cards */
-    .case-detail-card {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(0, 63, 135, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-        position: relative;
-    }
-    
-    .case-detail-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 63, 135, 0.15);
-        border-color: var(--saps-blue);
-    }
-    
-    .case-detail-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--saps-blue), var(--saps-gold));
-    }
-    
-    .card-header-enhanced {
-        background: white;
-        border-bottom: 2px solid var(--saps-blue-light);
-        padding: 1.2rem 1.5rem;
-    }
-    
-    .card-header-enhanced h5 {
-        color: var(--saps-blue);
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-    
-    /* Enhanced Timeline */
-    .timeline-enhanced {
-        position: relative;
-        padding-left: 2.5rem;
-        margin-top: 1rem;
-    }
-    
-    .timeline-enhanced::before {
-        content: '';
-        position: absolute;
-        left: 15px;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: linear-gradient(to bottom, var(--saps-blue), var(--saps-gold));
-        border-radius: 3px;
-    }
-    
-    .timeline-item-enhanced {
-        position: relative;
-        margin-bottom: 2rem;
-        background: white;
-        border-radius: 12px;
-        padding: 1.2rem;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        transition: all 0.3s;
-    }
-    
-    .timeline-item-enhanced:hover {
-        transform: translateX(5px);
-        border-color: var(--saps-blue);
-        box-shadow: 0 4px 15px rgba(0, 63, 135, 0.1);
-    }
-    
-    .timeline-item-enhanced::before {
-        content: '';
-        position: absolute;
-        left: -2.35rem;
-        top: 1.5rem;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 3px solid white;
-        box-shadow: 0 0 0 3px var(--saps-blue);
-        background: var(--saps-blue);
-        z-index: 2;
-    }
-    
-    .timeline-item-enhanced.status-change::before { 
-        background: var(--saps-gold);
-        box-shadow: 0 0 0 3px var(--saps-gold);
-    }
-    
-    .timeline-item-enhanced.case-created::before { 
-        background: #28a745;
-        box-shadow: 0 0 0 3px #28a745;
-    }
-    
-    /* Officer Card */
-    .officer-card {
-        text-align: center;
-        padding: 1.5rem;
-    }
-    
-    .officer-avatar {
-        width: 100px;
-        height: 100px;
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.2rem;
-        color: white;
-        font-size: 2rem;
-        border: 4px solid white;
-        box-shadow: 0 0 0 4px var(--saps-blue-light);
-        transition: all 0.3s;
-    }
-    
-    .officer-card:hover .officer-avatar {
-        transform: scale(1.1) rotate(5deg);
-        box-shadow: 0 0 0 4px var(--saps-blue-light), 0 8px 25px rgba(0, 63, 135, 0.3);
-    }
-    
-    /* Suspect Card */
-    .suspect-card {
-        border: 2px solid var(--saps-blue);
-        background: linear-gradient(135deg, #f8f9fc, white);
-    }
-    
-    .suspect-photo-enhanced {
-        width: 140px;
-        height: 140px;
-        border-radius: 50%;
-        border: 4px solid var(--saps-blue);
-        box-shadow: 0 4px 20px rgba(0, 63, 135, 0.2);
-        margin: 0 auto 1.2rem;
-        overflow: hidden;
-        transition: all 0.3s;
-        position: relative;
-    }
-    
-    .suspect-photo-enhanced:hover {
-        transform: scale(1.05);
-        border-color: var(--saps-gold);
-        box-shadow: 0 8px 30px rgba(0, 63, 135, 0.3);
-    }
-    
-    .suspect-photo-enhanced img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    .suspect-photo-enhanced .photo-placeholder {
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, var(--saps-blue-light), #e6f0ff);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--saps-blue);
-    }
-    
-    /* Action Buttons */
-    .action-btn {
-        padding: 0.6rem 1.5rem;
-        border-radius: 10px;
-        font-weight: 600;
-        transition: all 0.3s;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        border: 2px solid transparent;
-    }
-    
-    .action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Status Modal */
-    .status-modal-content {
-        border: none;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 63, 135, 0.3);
-    }
-    
-    .status-option {
-        padding: 1rem;
-        border-radius: 10px;
-        border: 2px solid transparent;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin-bottom: 0.5rem;
-    }
-    
-    .status-option:hover {
-        transform: translateX(5px);
-        background: rgba(0, 63, 135, 0.05);
-        border-color: var(--saps-blue-light);
-    }
-    
-    .status-option.selected {
-        background: var(--saps-blue-light);
-        border-color: var(--saps-blue);
-    }
-    
-    /* Info Grid */
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-top: 1.5rem;
-    }
-    
-    .info-item {
-        padding: 1.2rem;
-        background: rgba(0, 63, 135, 0.03);
-        border-radius: 12px;
-        border-left: 4px solid var(--saps-blue);
-        transition: all 0.3s;
-    }
-    
-    .info-item:hover {
-        transform: translateY(-3px);
-        background: rgba(0, 63, 135, 0.08);
-        border-left-color: var(--saps-gold);
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .case-header {
-            padding: 1.5rem;
-        }
-        
-        .timeline-enhanced {
-            padding-left: 2rem;
-        }
-        
-        .timeline-item-enhanced::before {
-            left: -2.1rem;
-        }
-        
-        .info-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
+{% block page_header %}
+<div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
+    <div class="row py-5">
+        <div class="col-12 pt-lg-5 mt-lg-5 text-center">
+            <h1 class="display-4 text-white animated zoomIn">Case Details</h1>
+            <a href="{{ url_for('main.index') }}" class="h5 text-white">Home</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="{{ url_for('cases.view_cases') }}" class="h5 text-white">Cases</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="#" class="h5 text-white">{{ case.case_number }}</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
-<div class="container py-4 py-lg-5">
+<div class="container py-5">
     <!-- Case Header -->
     <div class="case-header animate__animated animate__fadeIn">
         <div class="row align-items-center">
@@ -418,7 +109,10 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="case-description">
-                        <p class="lead text-dark mb-4">{{ case.description }}</p>
+                        <!-- FIX: Added grey background to the description paragraph -->
+                        <p class="lead text-dark mb-4 bg-light p-3 rounded-3 border border-light">
+                            {{ case.description }}
+                        </p>
                         
                         <div class="info-grid">
                             <div class="info-item">
@@ -807,34 +501,283 @@
     </div>
 </div>
 {% endif %}
-{% endblock %}
 
-{% block scripts %}
+<style>
+    /* All existing styles remain unchanged */
+    .case-header {
+        background: linear-gradient(135deg, var(--saps-blue-light), #e6f0ff);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0, 63, 135, 0.1);
+    }
+    .case-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(100px, -100px);
+    }
+    .case-number-badge {
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        color: white;
+        font-family: 'Courier New', monospace;
+        font-weight: 700;
+        padding: 0.5rem 1.2rem;
+        border-radius: 10px;
+        display: inline-block;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 63, 135, 0.2);
+        transition: all 0.3s;
+    }
+    .case-number-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 63, 135, 0.3);
+    }
+    .priority-indicator { position: relative; padding-left: 1.5rem; }
+    .priority-indicator::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    .priority-high::before { background: #dc3545; }
+    .priority-medium::before { background: #ffc107; }
+    .priority-low::before { background: #28a745; }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+        50% { opacity: 0.7; transform: translateY(-50%) scale(1.1); }
+    }
+    .case-detail-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 63, 135, 0.1);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        position: relative;
+    }
+    .case-detail-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 63, 135, 0.15);
+        border-color: var(--saps-blue);
+    }
+    .case-detail-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--saps-blue), var(--saps-gold));
+    }
+    .card-header-enhanced {
+        background: white;
+        border-bottom: 2px solid var(--saps-blue-light);
+        padding: 1.2rem 1.5rem;
+    }
+    .card-header-enhanced h5 {
+        color: var(--saps-blue);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .timeline-enhanced {
+        position: relative;
+        padding-left: 2.5rem;
+        margin-top: 1rem;
+    }
+    .timeline-enhanced::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(to bottom, var(--saps-blue), var(--saps-gold));
+        border-radius: 3px;
+    }
+    .timeline-item-enhanced {
+        position: relative;
+        margin-bottom: 2rem;
+        background: white;
+        border-radius: 12px;
+        padding: 1.2rem;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
+    }
+    .timeline-item-enhanced:hover {
+        transform: translateX(5px);
+        border-color: var(--saps-blue);
+        box-shadow: 0 4px 15px rgba(0, 63, 135, 0.1);
+    }
+    .timeline-item-enhanced::before {
+        content: '';
+        position: absolute;
+        left: -2.35rem;
+        top: 1.5rem;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 0 0 3px var(--saps-blue);
+        background: var(--saps-blue);
+        z-index: 2;
+    }
+    .timeline-item-enhanced.status-change::before { 
+        background: var(--saps-gold);
+        box-shadow: 0 0 0 3px var(--saps-gold);
+    }
+    .timeline-item-enhanced.case-created::before { 
+        background: #28a745;
+        box-shadow: 0 0 0 3px #28a745;
+    }
+    .officer-card { text-align: center; padding: 1.5rem; }
+    .officer-avatar {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.2rem;
+        color: white;
+        font-size: 2rem;
+        border: 4px solid white;
+        box-shadow: 0 0 0 4px var(--saps-blue-light);
+        transition: all 0.3s;
+    }
+    .officer-card:hover .officer-avatar {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 0 0 4px var(--saps-blue-light), 0 8px 25px rgba(0, 63, 135, 0.3);
+    }
+    .suspect-card {
+        border: 2px solid var(--saps-blue);
+        background: linear-gradient(135deg, #f8f9fc, white);
+    }
+    .suspect-photo-enhanced {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: 4px solid var(--saps-blue);
+        box-shadow: 0 4px 20px rgba(0, 63, 135, 0.2);
+        margin: 0 auto 1.2rem;
+        overflow: hidden;
+        transition: all 0.3s;
+        position: relative;
+    }
+    .suspect-photo-enhanced:hover {
+        transform: scale(1.05);
+        border-color: var(--saps-gold);
+        box-shadow: 0 8px 30px rgba(0, 63, 135, 0.3);
+    }
+    .suspect-photo-enhanced img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .suspect-photo-enhanced .photo-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--saps-blue-light), #e6f0ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--saps-blue);
+    }
+    .action-btn {
+        padding: 0.6rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border: 2px solid transparent;
+    }
+    .action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    .status-modal-content {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 63, 135, 0.3);
+    }
+    .status-option {
+        padding: 1rem;
+        border-radius: 10px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-bottom: 0.5rem;
+    }
+    .status-option:hover {
+        transform: translateX(5px);
+        background: rgba(0, 63, 135, 0.05);
+        border-color: var(--saps-blue-light);
+    }
+    .status-option.selected {
+        background: var(--saps-blue-light);
+        border-color: var(--saps-blue);
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    .info-item {
+        padding: 1.2rem;
+        background: rgba(0, 63, 135, 0.03);
+        border-radius: 12px;
+        border-left: 4px solid var(--saps-blue);
+        transition: all 0.3s;
+    }
+    .info-item:hover {
+        transform: translateY(-3px);
+        background: rgba(0, 63, 135, 0.08);
+        border-left-color: var(--saps-gold);
+    }
+    @media (max-width: 768px) {
+        .case-header { padding: 1.5rem; }
+        .timeline-enhanced { padding-left: 2rem; }
+        .timeline-item-enhanced::before { left: -2.1rem; }
+        .info-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
 <script>
+    // Original scripts from view.html
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize tooltips
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        
-        // Auto-select current status in modal
+        tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el); });
         const currentStatus = '{{ case.status }}';
         selectStatus(currentStatus);
-        
-        // Add animation to timeline items
         const timelineItems = document.querySelectorAll('.timeline-item-enhanced');
         timelineItems.forEach((item, index) => {
             item.style.animationDelay = `${index * 0.1}s`;
         });
-        
-        // Print functionality
         const printBtn = document.querySelector('[onclick="window.print()"]');
         printBtn.addEventListener('click', function(e) {
             e.preventDefault();
             const printContents = document.querySelector('.container').innerHTML;
             const originalContents = document.body.innerHTML;
-            
             document.body.innerHTML = `
                 <div class="container">
                     <div class="text-center mb-4">
@@ -845,33 +788,21 @@
                     ${printContents}
                 </div>
             `;
-            
             window.print();
             document.body.innerHTML = originalContents;
             window.location.reload();
         });
     });
-    
+
     function selectStatus(status) {
-        // Update selected status UI
-        document.querySelectorAll('.status-option').forEach(option => {
-            option.classList.remove('selected');
-        });
-        
-        // Find and select the correct option
+        document.querySelectorAll('.status-option').forEach(option => option.classList.remove('selected'));
         const selectedOption = Array.from(document.querySelectorAll('.status-option')).find(option => {
             return option.querySelector('h6').textContent.toLowerCase().includes(status);
         });
-        
-        if (selectedOption) {
-            selectedOption.classList.add('selected');
-        }
-        
-        // Update hidden input
+        if (selectedOption) selectedOption.classList.add('selected');
         document.getElementById('selectedStatus').value = status;
     }
-    
-    // Status form submission
+
     document.getElementById('statusForm')?.addEventListener('submit', function(e) {
         const notes = document.getElementById('statusNotes').value.trim();
         if (!notes) {
@@ -879,14 +810,9 @@
             alert('Please provide notes for the status change.');
             return false;
         }
-        
-        // Show loading state
         const submitBtn = this.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Updating...';
         submitBtn.disabled = true;
-        
-        // Allow form to submit
         return true;
     });
 </script>

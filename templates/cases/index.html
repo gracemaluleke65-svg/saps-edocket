@@ -1,358 +1,26 @@
 {% extends "base.html" %}
 
-{% block title %}Case Management - SAPS eDocket{% endblock %}
+{% block title %}Case Management – SAPS eDocket{% endblock %}
 
-{% block extra_css %}
-<style>
-    /* Case Management Specific Styles */
-    .management-header {
-        background: linear-gradient(135deg, rgba(0, 63, 135, 0.05) 0%, rgba(212, 175, 55, 0.03) 100%);
-        border-radius: 20px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(0, 63, 135, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .management-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 100%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
-        z-index: 0;
-    }
-    
-    .case-stat-card {
-        background: white;
-        border: none;
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 20px rgba(0, 63, 135, 0.08);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        height: 100%;
-        position: relative;
-        overflow: hidden;
-        border-left: 4px solid var(--saps-blue);
-    }
-    
-    .case-stat-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 63, 135, 0.15);
-        border-left-color: var(--saps-gold);
-    }
-    
-    .stat-icon {
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, var(--saps-blue-light), rgba(0, 63, 135, 0.1));
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        color: var(--saps-blue);
-        margin-bottom: 1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .case-stat-card:hover .stat-icon {
-        transform: rotate(15deg) scale(1.1);
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-    }
-    
-    /* Enhanced Filter Section */
-    .filter-section {
-        background: white;
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 20px rgba(0, 63, 135, 0.08);
-        margin-bottom: 2rem;
-        border: 1px solid rgba(0, 63, 135, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .filter-section:hover {
-        box-shadow: 0 8px 30px rgba(0, 63, 135, 0.12);
-        border-color: var(--saps-blue);
-    }
-    
-    .filter-group .form-control, .filter-group .form-select {
-        background: #f8fafc;
-        border: 2px solid #e6f0ff;
-        border-radius: 10px;
-        padding: 0.75rem 1rem;
-        font-size: 0.95rem;
-        transition: all 0.3s;
-    }
-    
-    .filter-group .form-control:focus, .filter-group .form-select:focus {
-        background: white;
-        border-color: var(--saps-blue);
-        box-shadow: 0 0 0 0.25rem rgba(0, 63, 135, 0.15);
-        transform: translateY(-1px);
-    }
-    
-    .filter-btn {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .filter-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0, 63, 135, 0.3);
-    }
-    
-    /* Enhanced Case Cards */
-    .case-grid-item {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .case-grid-item:hover {
-        transform: translateY(-8px);
-    }
-    
-    .case-card-enhanced {
-        background: white;
-        border: none;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 63, 135, 0.08);
-        height: 100%;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        border-top: 4px solid transparent;
-    }
-    
-    .case-card-enhanced:hover {
-        box-shadow: 0 20px 40px rgba(0, 63, 135, 0.15);
-        border-top-color: var(--saps-gold);
-    }
-    
-    .case-card-header {
-        background: linear-gradient(135deg, rgba(0, 63, 135, 0.05), rgba(212, 175, 55, 0.03));
-        padding: 1.5rem;
-        border-bottom: 1px solid rgba(0, 63, 135, 0.1);
-    }
-    
-    .case-number-badge {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .case-status-badge {
-        padding: 0.5rem 1.2rem;
-        border-radius: 20px;
-        font-weight: 700;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    .case-severity-indicator {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 0.8rem;
-    }
-    
-    .severity-high {
-        background: linear-gradient(135deg, #ff5252, #d32f2f);
-        color: white;
-    }
-    
-    .severity-medium {
-        background: linear-gradient(135deg, #ffb74d, #f57c00);
-        color: white;
-    }
-    
-    .severity-low {
-        background: linear-gradient(135deg, #4fc3f7, #0288d1);
-        color: white;
-    }
-    
-    .case-suspect-info {
-        background: linear-gradient(135deg, rgba(0, 63, 135, 0.05), transparent);
-        padding: 1rem;
-        border-radius: 12px;
-        margin: 1rem 0;
-        border: 1px solid rgba(0, 63, 135, 0.1);
-    }
-    
-    .suspect-avatar {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 600;
-        font-size: 0.9rem;
-        margin-right: 1rem;
-        flex-shrink: 0;
-    }
-    
-    .case-progress {
-        height: 6px;
-        background: #e6f0ff;
-        border-radius: 3px;
-        overflow: hidden;
-        margin: 1rem 0;
-    }
-    
-    .case-progress-bar {
-        height: 100%;
-        border-radius: 3px;
-        background: linear-gradient(90deg, var(--saps-blue), var(--saps-gold));
-        transition: width 1s ease;
-    }
-    
-    .case-actions {
-        display: flex;
-        gap: 0.5rem;
-        margin-top: 1.5rem;
-    }
-    
-    .case-action-btn {
-        flex: 1;
-        text-align: center;
-        padding: 0.75rem;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-    
-    .case-action-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    }
-    
-    .action-primary {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-    }
-    
-    .action-secondary {
-        background: linear-gradient(135deg, var(--saps-gold), #c9a227);
-        color: var(--saps-black);
-    }
-    
-    /* Enhanced Pagination */
-    .pagination-enhanced {
-        margin-top: 3rem;
-    }
-    
-    .page-item .page-link {
-        border: none;
-        border-radius: 10px;
-        margin: 0 5px;
-        color: var(--saps-blue);
-        font-weight: 600;
-        transition: all 0.3s ease;
-        min-width: 40px;
-        text-align: center;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 63, 135, 0.05);
-    }
-    
-    .page-item .page-link:hover {
-        background: var(--saps-blue-light);
-        color: var(--saps-blue);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 63, 135, 0.1);
-    }
-    
-    .page-item.active .page-link {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        box-shadow: 0 5px 15px rgba(0, 63, 135, 0.2);
-    }
-    
-    /* Empty State */
-    .empty-state {
-        background: linear-gradient(135deg, rgba(0, 63, 135, 0.05), rgba(212, 175, 55, 0.03));
-        border-radius: 20px;
-        padding: 4rem 2rem;
-        text-align: center;
-        border: 2px dashed rgba(0, 63, 135, 0.1);
-    }
-    
-    .empty-icon {
-        width: 100px;
-        height: 100px;
-        background: linear-gradient(135deg, var(--saps-blue-light), rgba(0, 63, 135, 0.1));
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 2rem;
-        font-size: 2.5rem;
-        color: var(--saps-blue);
-    }
-    
-    /* Quick Stats */
-    .quick-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-        margin-top: 2rem;
-    }
-    
-    .quick-stat-item {
-        background: white;
-        border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
-        box-shadow: 0 2px 10px rgba(0, 63, 135, 0.05);
-        border: 1px solid rgba(0, 63, 135, 0.1);
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .management-header {
-            padding: 1.5rem;
-        }
-        
-        .case-actions {
-            flex-direction: column;
-        }
-        
-        .quick-stats {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-</style>
+{% block page_header %}
+<div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
+    <div class="row py-5">
+        <div class="col-12 pt-lg-5 mt-lg-5 text-center">
+            <h1 class="display-4 text-white animated zoomIn">Case Management</h1>
+            <a href="{{ url_for('main.index') }}" class="h5 text-white">Home</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="#" class="h5 text-white">Cases</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
-<div class="container py-4 py-lg-5">
+<div class="container py-5">
+    <!-- All original content from cases/index.html goes here -->
+    <!-- I will include the full management header, filters, grid, and pagination -->
+    <!-- (copy everything between the content block from the original) -->
+
     <!-- Management Header -->
     <div class="management-header">
         <div class="row align-items-center">
@@ -634,33 +302,316 @@
     </div>
     {% endif %}
 </div>
-{% endblock %}
 
-{% block scripts %}
+<!-- Keep all original styles and scripts from index.html -->
+<style>
+    /* (all CSS from original index.html) */
+    .management-header {
+        background: linear-gradient(135deg, rgba(0, 63, 135, 0.05) 0%, rgba(212, 175, 55, 0.03) 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(0, 63, 135, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    .management-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+        z-index: 0;
+    }
+    .case-stat-card {
+        background: white;
+        border: none;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 63, 135, 0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        border-left: 4px solid var(--saps-blue);
+    }
+    .case-stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 63, 135, 0.15);
+        border-left-color: var(--saps-gold);
+    }
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--saps-blue-light), rgba(0, 63, 135, 0.1));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--saps-blue);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    .case-stat-card:hover .stat-icon {
+        transform: rotate(15deg) scale(1.1);
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        color: white;
+    }
+    .filter-section {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 63, 135, 0.08);
+        margin-bottom: 2rem;
+        border: 1px solid rgba(0, 63, 135, 0.1);
+        transition: all 0.3s ease;
+    }
+    .filter-section:hover {
+        box-shadow: 0 8px 30px rgba(0, 63, 135, 0.12);
+        border-color: var(--saps-blue);
+    }
+    .filter-group .form-control, .filter-group .form-select {
+        background: #f8fafc;
+        border: 2px solid #e6f0ff;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+    }
+    .filter-group .form-control:focus, .filter-group .form-select:focus {
+        background: white;
+        border-color: var(--saps-blue);
+        box-shadow: 0 0 0 0.25rem rgba(0, 63, 135, 0.15);
+        transform: translateY(-1px);
+    }
+    .filter-btn {
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .filter-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 63, 135, 0.3);
+    }
+    .case-grid-item {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .case-grid-item:hover {
+        transform: translateY(-8px);
+    }
+    .case-card-enhanced {
+        background: white;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 63, 135, 0.08);
+        height: 100%;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        border-top: 4px solid transparent;
+    }
+    .case-card-enhanced:hover {
+        box-shadow: 0 20px 40px rgba(0, 63, 135, 0.15);
+        border-top-color: var(--saps-gold);
+    }
+    .case-card-header {
+        background: linear-gradient(135deg, rgba(0, 63, 135, 0.05), rgba(212, 175, 55, 0.03));
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(0, 63, 135, 0.1);
+    }
+    .case-number-badge {
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .case-status-badge {
+        padding: 0.5rem 1.2rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .case-severity-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+    .severity-high {
+        background: linear-gradient(135deg, #ff5252, #d32f2f);
+        color: white;
+    }
+    .severity-medium {
+        background: linear-gradient(135deg, #ffb74d, #f57c00);
+        color: white;
+    }
+    .severity-low {
+        background: linear-gradient(135deg, #4fc3f7, #0288d1);
+        color: white;
+    }
+    .case-suspect-info {
+        background: linear-gradient(135deg, rgba(0, 63, 135, 0.05), transparent);
+        padding: 1rem;
+        border-radius: 12px;
+        margin: 1rem 0;
+        border: 1px solid rgba(0, 63, 135, 0.1);
+    }
+    .suspect-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    .case-progress {
+        height: 6px;
+        background: #e6f0ff;
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 1rem 0;
+    }
+    .case-progress-bar {
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, var(--saps-blue), var(--saps-gold));
+        transition: width 1s ease;
+    }
+    .case-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+    .case-action-btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.75rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    .case-action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .action-primary {
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        color: white;
+    }
+    .action-secondary {
+        background: linear-gradient(135deg, var(--saps-gold), #c9a227);
+        color: var(--saps-black);
+    }
+    .pagination-enhanced { margin-top: 3rem; }
+    .page-item .page-link {
+        border: none;
+        border-radius: 10px;
+        margin: 0 5px;
+        color: var(--saps-blue);
+        font-weight: 600;
+        transition: all 0.3s ease;
+        min-width: 40px;
+        text-align: center;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 63, 135, 0.05);
+    }
+    .page-item .page-link:hover {
+        background: var(--saps-blue-light);
+        color: var(--saps-blue);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 63, 135, 0.1);
+    }
+    .page-item.active .page-link {
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        color: white;
+        box-shadow: 0 5px 15px rgba(0, 63, 135, 0.2);
+    }
+    .empty-state {
+        background: linear-gradient(135deg, rgba(0, 63, 135, 0.05), rgba(212, 175, 55, 0.03));
+        border-radius: 20px;
+        padding: 4rem 2rem;
+        text-align: center;
+        border: 2px dashed rgba(0, 63, 135, 0.1);
+    }
+    .empty-icon {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, var(--saps-blue-light), rgba(0, 63, 135, 0.1));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        font-size: 2.5rem;
+        color: var(--saps-blue);
+    }
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    .quick-stat-item {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 63, 135, 0.05);
+        border: 1px solid rgba(0, 63, 135, 0.1);
+    }
+    @media (max-width: 768px) {
+        .management-header { padding: 1.5rem; }
+        .case-actions { flex-direction: column; }
+        .quick-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+</style>
+
 <script>
-// Filter reset function
-function resetFilters() {
-    window.location.href = "{{ url_for('cases.view_cases') }}";
-}
-
-// Add animation to case cards on scroll
-document.addEventListener('DOMContentLoaded', function() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate__animated', 'animate__fadeInUp');
-            }
+    // Original script from index.html
+    function resetFilters() {
+        window.location.href = "{{ url_for('cases.view_cases') }}";
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.case-grid-item').forEach(card => {
+            observer.observe(card);
         });
-    }, observerOptions);
-    
-    document.querySelectorAll('.case-grid-item').forEach(card => {
-        observer.observe(card);
     });
-});
 </script>
 {% endblock %}

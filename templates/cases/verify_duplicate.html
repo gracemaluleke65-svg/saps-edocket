@@ -1,430 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Face Verification - SAPS eDocket{% endblock %}
+{% block title %}Face Verification – SAPS eDocket{% endblock %}
 
-{% block extra_css %}
-<style>
-    :root {
-        --saps-blue: #003f87;
-        --saps-blue-dark: #002a5c;
-        --saps-blue-light: #e6f0ff;
-        --saps-gold: #d4af37;
-        --saps-gold-dark: #b8960c;
-        --saps-green: #28a745;
-        --saps-red: #dc3545;
-    }
-    
-    /* Verification Page Specific Styles */
-    .verification-container {
-        background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
-        border-radius: 20px;
-        padding: 2rem;
-        position: relative;
-        overflow: hidden;
-        border: 1px solid rgba(0, 63, 135, 0.1);
-    }
-    
-    .verification-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 5px;
-        background: linear-gradient(90deg, var(--saps-blue), var(--saps-gold), var(--saps-red));
-    }
-    
-    .alert-verification {
-        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-        border: none;
-        border-left: 5px solid var(--saps-gold);
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
-        animation: pulse-glow 2s infinite;
-    }
-    
-    @keyframes pulse-glow {
-        0%, 100% { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15); }
-        50% { box-shadow: 0 4px 25px rgba(255, 193, 7, 0.3); }
-    }
-    
-    /* Suspect Comparison Cards */
-    .suspect-comparison {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin: 2rem 0;
-    }
-    
-    .suspect-card {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 2px solid transparent;
-        overflow: hidden;
-        position: relative;
-    }
-    
-    .suspect-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 50px rgba(0, 63, 135, 0.15);
-    }
-    
-    .suspect-card.new-suspect {
-        border-color: var(--saps-green);
-    }
-    
-    .suspect-card.new-suspect:hover {
-        border-color: var(--saps-green);
-        box-shadow: 0 20px 50px rgba(0, 100, 0, 0.15);
-    }
-    
-    .suspect-card.existing-suspect {
-        border-color: var(--saps-gold);
-    }
-    
-    .suspect-card.existing-suspect:hover {
-        border-color: var(--saps-gold);
-        box-shadow: 0 20px 50px rgba(212, 175, 55, 0.15);
-    }
-    
-    .card-header-gradient {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        padding: 1.5rem;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .card-header-gradient::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        transform: rotate(45deg);
-    }
-    
-    .card-header-gradient.new {
-        background: linear-gradient(135deg, var(--saps-green), #2e7d32);
-    }
-    
-    .card-header-gradient.warning {
-        background: linear-gradient(135deg, var(--saps-gold), #c9a227);
-    }
-    
-    /* Face Comparison Area */
-    .face-comparison-area {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-        margin: 2rem 0;
-        flex-wrap: wrap;
-    }
-    
-    .face-circle {
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        border: 4px solid;
-        overflow: hidden;
-        position: relative;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s;
-        background: #f8f9fa;
-    }
-    
-    .face-circle:hover {
-        transform: scale(1.05);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-    }
-    
-    .face-circle.new {
-        border-color: var(--saps-green);
-    }
-    
-    .face-circle.existing {
-        border-color: var(--saps-gold);
-    }
-    
-    .face-circle img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s;
-    }
-    
-    .face-circle:hover img {
-        transform: scale(1.1);
-    }
-    
-    .comparison-arrow {
-        font-size: 2.5rem;
-        color: var(--saps-blue);
-        animation: bounce 2s infinite;
-    }
-    
-    @keyframes bounce {
-        0%, 100% { transform: translateX(0); }
-        50% { transform: translateX(10px); }
-    }
-    
-    /* Similarity Meter */
-    .similarity-meter {
-        background: white;
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-        margin: 2rem 0;
-        border: 2px solid var(--saps-blue-light);
-    }
-    
-    .similarity-bar-container {
-        height: 20px;
-        background: linear-gradient(90deg, #dc3545, #ffc107, #28a745);
-        border-radius: 10px;
-        overflow: hidden;
-        position: relative;
-        margin: 1rem 0;
-    }
-    
-    .similarity-indicator {
-        position: absolute;
-        top: -5px;
-        width: 40px;
-        height: 30px;
-        background: var(--saps-blue);
-        border-radius: 8px;
-        transform: translateX(-50%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 0.9rem;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        transition: left 1.5s ease-in-out;
-    }
-    
-    .similarity-indicator::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 0;
-        height: 0;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 5px solid var(--saps-blue);
-    }
-    
-    /* Match Details */
-    .match-details {
-        background: linear-gradient(135deg, var(--saps-blue-light), rgba(212, 175, 55, 0.05));
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border: 2px solid rgba(0, 63, 135, 0.1);
-    }
-    
-    .match-item {
-        background: white;
-        border-radius: 10px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border: 2px solid transparent;
-        transition: all 0.3s;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .match-item:hover {
-        transform: translateX(5px);
-        border-color: var(--saps-gold);
-        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
-    }
-    
-    .match-item::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 5px;
-        background: linear-gradient(180deg, var(--saps-gold), #c9a227);
-        border-radius: 5px 0 0 5px;
-    }
-    
-    .similarity-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 700;
-        font-size: 0.9rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .similarity-high { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); color: #2e7d32; }
-    .similarity-medium { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #e65100; }
-    .similarity-low { background: linear-gradient(135deg, #ffebee, #ffcdd2); color: #c62828; }
-    
-    /* Verification Buttons */
-    .verification-buttons {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-        margin-top: 2rem;
-    }
-    
-    .verify-btn {
-        padding: 1rem 2rem;
-        border-radius: 12px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        min-width: 200px;
-        border: none;
-    }
-    
-    .verify-btn::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-    }
-    
-    .verify-btn:hover::before {
-        width: 300px;
-        height: 300px;
-    }
-    
-    .btn-confirm-new {
-        background: linear-gradient(135deg, var(--saps-green), #2e7d32);
-        color: white;
-    }
-    
-    .btn-confirm-new:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(46, 125, 50, 0.3);
-        color: white;
-    }
-    
-    .btn-use-existing {
-        background: linear-gradient(135deg, var(--saps-gold), #c9a227);
-        color: var(--saps-blue);
-    }
-    
-    .btn-use-existing:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(212, 175, 55, 0.3);
-        color: var(--saps-blue);
-    }
-    
-    /* Face Recognition Info */
-    .face-recognition-info {
-        background: var(--saps-blue-light);
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin: 2rem 0;
-        border-left: 5px solid var(--saps-blue);
-    }
-    
-    .tech-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(0, 63, 135, 0.1);
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        color: var(--saps-blue);
-        font-weight: 600;
-        margin: 0.5rem;
-    }
-    
-    /* Photo Helper */
-    .photo-helper {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .photo-fallback {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, var(--saps-blue-light), #e9ecef);
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .verification-container {
-            padding: 1.5rem;
-        }
-        
-        .face-comparison-area {
-            flex-direction: column;
-        }
-        
-        .comparison-arrow {
-            transform: rotate(90deg);
-            margin: 1rem 0;
-        }
-        
-        .verify-btn {
-            min-width: 100%;
-        }
-        
-        .suspect-comparison {
-            grid-template-columns: 1fr;
-        }
-        
-        .face-circle {
-            width: 150px;
-            height: 150px;
-        }
-    }
-</style>
+{% block page_header %}
+<div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
+    <div class="row py-5">
+        <div class="col-12 pt-lg-5 mt-lg-5 text-center">
+            <h1 class="display-4 text-white animated zoomIn">Face Recognition Verification</h1>
+            <a href="{{ url_for('main.index') }}" class="h5 text-white">Home</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="{{ url_for('cases.view_cases') }}" class="h5 text-white">Cases</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="#" class="h5 text-white">Verify</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5 py-lg-6">
-    <!-- Page Header -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="d-flex align-items-center mb-4">
-                <div class="bg-primary rounded-3 p-3 me-3" style="background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));">
-                    <i class="fas fa-robot fa-2x text-white"></i>
-                </div>
-                <div>
-                    <h1 class="display-5 fw-bold mb-2" style="color: var(--saps-blue);">Face Recognition Verification</h1>
-                    <p class="lead text-dark">
-                        <i class="fas fa-shield-alt me-1"></i>
-                        Biometric verification required - {{ similar|length }} potential match(es) detected
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="container py-5">
+    <!-- All original content from verify_duplicate.html -->
+    <!-- Copy the full verification container, alerts, face comparison, etc. -->
 
-    <!-- Main Verification Container -->
     <div class="verification-container mb-5">
-        <!-- Warning Alert -->
+        <!-- Alert -->
         <div class="alert alert-verification mb-5">
             <div class="d-flex align-items-start">
                 <div class="flex-shrink-0">
@@ -450,7 +49,6 @@
 
         <!-- Face Comparison -->
         <div class="face-comparison-area">
-            <!-- New Suspect -->
             <div class="text-center">
                 <div class="face-circle new mb-3">
                     {% if suspect.photo_path %}
@@ -471,12 +69,10 @@
                 </span>
             </div>
 
-            <!-- Comparison Arrow -->
             <div class="comparison-arrow">
                 <i class="fas fa-arrows-alt-h"></i>
             </div>
 
-            <!-- Existing Suspects -->
             <div class="text-center">
                 <div class="face-circle existing mb-3">
                     {% if similar and similar|length > 0 and similar[0].suspect.photo_path %}
@@ -507,35 +103,27 @@
             </div>
         </div>
 
-        <!-- Similarity Analysis -->
+        <!-- Similarity Meter -->
         {% if similar and similar|length > 0 %}
         <div class="similarity-meter mt-5">
             <h5 class="fw-bold mb-3">
                 <i class="fas fa-chart-line me-2"></i>
                 Similarity Analysis Results
             </h5>
-            
             <div class="similarity-bar-container">
                 <div class="similarity-indicator" style="left: {{ (similar[0].similarity * 100)|int }}%;">
                     {{ "%.0f"|format(similar[0].similarity * 100) }}%
                 </div>
             </div>
-            
             <div class="row text-center mt-3">
-                <div class="col">
-                    <small class="text-danger fw-bold">Low</small>
-                </div>
-                <div class="col">
-                    <small class="text-warning fw-bold">Medium</small>
-                </div>
-                <div class="col">
-                    <small class="text-success fw-bold">High</small>
-                </div>
+                <div class="col"><small class="text-danger fw-bold">Low</small></div>
+                <div class="col"><small class="text-warning fw-bold">Medium</small></div>
+                <div class="col"><small class="text-success fw-bold">High</small></div>
             </div>
         </div>
         {% endif %}
 
-        <!-- Technical Details -->
+        <!-- Tech Details -->
         <div class="face-recognition-info mt-5">
             <h5 class="fw-bold mb-3">
                 <i class="fas fa-microchip me-2"></i>
@@ -546,23 +134,15 @@
                 Each face is converted to a mathematical vector and compared using cosine similarity.
             </p>
             <div class="d-flex flex-wrap">
-                <span class="tech-badge">
-                    <i class="fas fa-camera"></i> Face Detection
-                </span>
-                <span class="tech-badge">
-                    <i class="fas fa-calculator"></i> 128D Encoding
-                </span>
-                <span class="tech-badge">
-                    <i class="fas fa-chart-bar"></i> Cosine Similarity
-                </span>
-                <span class="tech-badge">
-                    <i class="fas fa-database"></i> SQLAlchemy Storage
-                </span>
+                <span class="tech-badge"><i class="fas fa-camera"></i> Face Detection</span>
+                <span class="tech-badge"><i class="fas fa-calculator"></i> 128D Encoding</span>
+                <span class="tech-badge"><i class="fas fa-chart-bar"></i> Cosine Similarity</span>
+                <span class="tech-badge"><i class="fas fa-database"></i> SQLAlchemy Storage</span>
             </div>
         </div>
     </div>
 
-    <!-- Suspect Comparison -->
+    <!-- Suspect Comparison Cards -->
     <div class="row mb-5">
         <div class="col-lg-6 mb-4">
             <div class="suspect-card new-suspect h-100">
@@ -720,7 +300,6 @@
         </div>
     </div>
 
-    <!-- Navigation -->
     <div class="text-center mt-5 pt-4 border-top">
         <a href="{{ url_for('cases.create_case') }}" class="btn btn-outline-primary btn-lg px-5 py-3">
             <i class="fas fa-arrow-left me-2"></i>
@@ -729,24 +308,327 @@
     </div>
 </div>
 
+<!-- Include all original CSS and JS from verify_duplicate.html -->
+<style>
+    /* (copy all styles from verify_duplicate.html) */
+    :root {
+        --saps-blue: #003f87;
+        --saps-blue-dark: #002a5c;
+        --saps-blue-light: #e6f0ff;
+        --saps-gold: #d4af37;
+        --saps-gold-dark: #b8960c;
+        --saps-green: #28a745;
+        --saps-red: #dc3545;
+    }
+    .verification-container {
+        background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0, 63, 135, 0.1);
+    }
+    .verification-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--saps-blue), var(--saps-gold), var(--saps-red));
+    }
+    .alert-verification {
+        background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        border: none;
+        border-left: 5px solid var(--saps-gold);
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+        animation: pulse-glow 2s infinite;
+    }
+    @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15); }
+        50% { box-shadow: 0 4px 25px rgba(255, 193, 7, 0.3); }
+    }
+    .suspect-comparison {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+    .suspect-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px solid transparent;
+        overflow: hidden;
+        position: relative;
+    }
+    .suspect-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 50px rgba(0, 63, 135, 0.15);
+    }
+    .suspect-card.new-suspect { border-color: var(--saps-green); }
+    .suspect-card.new-suspect:hover {
+        border-color: var(--saps-green);
+        box-shadow: 0 20px 50px rgba(0, 100, 0, 0.15);
+    }
+    .suspect-card.existing-suspect { border-color: var(--saps-gold); }
+    .suspect-card.existing-suspect:hover {
+        border-color: var(--saps-gold);
+        box-shadow: 0 20px 50px rgba(212, 175, 55, 0.15);
+    }
+    .card-header-gradient {
+        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        color: white;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .card-header-gradient::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        transform: rotate(45deg);
+    }
+    .card-header-gradient.new { background: linear-gradient(135deg, var(--saps-green), #2e7d32); }
+    .card-header-gradient.warning { background: linear-gradient(135deg, var(--saps-gold), #c9a227); }
+    .face-comparison-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+    }
+    .face-circle {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 4px solid;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s;
+        background: #f8f9fa;
+    }
+    .face-circle:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+    .face-circle.new { border-color: var(--saps-green); }
+    .face-circle.existing { border-color: var(--saps-gold); }
+    .face-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    .face-circle:hover img { transform: scale(1.1); }
+    .comparison-arrow {
+        font-size: 2.5rem;
+        color: var(--saps-blue);
+        animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+        0%, 100% { transform: translateX(0); }
+        50% { transform: translateX(10px); }
+    }
+    .similarity-meter {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        margin: 2rem 0;
+        border: 2px solid var(--saps-blue-light);
+    }
+    .similarity-bar-container {
+        height: 20px;
+        background: linear-gradient(90deg, #dc3545, #ffc107, #28a745);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        margin: 1rem 0;
+    }
+    .similarity-indicator {
+        position: absolute;
+        top: -5px;
+        width: 40px;
+        height: 30px;
+        background: var(--saps-blue);
+        border-radius: 8px;
+        transform: translateX(-50%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: left 1.5s ease-in-out;
+    }
+    .similarity-indicator::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid var(--saps-blue);
+    }
+    .match-details {
+        background: linear-gradient(135deg, var(--saps-blue-light), rgba(212, 175, 55, 0.05));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border: 2px solid rgba(0, 63, 135, 0.1);
+    }
+    .match-item {
+        background: white;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 2px solid transparent;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    .match-item:hover {
+        transform: translateX(5px);
+        border-color: var(--saps-gold);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
+    }
+    .match-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 5px;
+        background: linear-gradient(180deg, var(--saps-gold), #c9a227);
+        border-radius: 5px 0 0 5px;
+    }
+    .similarity-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .similarity-high { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); color: #2e7d32; }
+    .similarity-medium { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #e65100; }
+    .similarity-low { background: linear-gradient(135deg, #ffebee, #ffcdd2); color: #c62828; }
+    .verification-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+    .verify-btn {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        min-width: 200px;
+        border: none;
+    }
+    .verify-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    .verify-btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+    .btn-confirm-new {
+        background: linear-gradient(135deg, var(--saps-green), #2e7d32);
+        color: white;
+    }
+    .btn-confirm-new:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(46, 125, 50, 0.3);
+        color: white;
+    }
+    .btn-use-existing {
+        background: linear-gradient(135deg, var(--saps-gold), #c9a227);
+        color: var(--saps-blue);
+    }
+    .btn-use-existing:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(212, 175, 55, 0.3);
+        color: var(--saps-blue);
+    }
+    .face-recognition-info {
+        background: var(--saps-blue-light);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border-left: 5px solid var(--saps-blue);
+    }
+    .tech-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(0, 63, 135, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        color: var(--saps-blue);
+        font-weight: 600;
+        margin: 0.5rem;
+    }
+    .photo-helper { position: relative; display: inline-block; }
+    .photo-fallback {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--saps-blue-light), #e9ecef);
+    }
+    @media (max-width: 768px) {
+        .verification-container { padding: 1.5rem; }
+        .face-comparison-area { flex-direction: column; }
+        .comparison-arrow { transform: rotate(90deg); margin: 1rem 0; }
+        .verify-btn { min-width: 100%; }
+        .suspect-comparison { grid-template-columns: 1fr; }
+        .face-circle { width: 150px; height: 150px; }
+    }
+</style>
+
 <script>
-    // Add interactive elements
     document.addEventListener('DOMContentLoaded', function() {
-        // Add hover effects to match items
         const matchItems = document.querySelectorAll('.match-item');
         matchItems.forEach(item => {
             item.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateX(10px)';
                 this.style.boxShadow = '0 12px 30px rgba(212, 175, 55, 0.2)';
             });
-            
             item.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateX(0)';
                 this.style.boxShadow = 'none';
             });
         });
-        
-        // Confirmation for new suspect
         const confirmNewBtn = document.querySelector('.btn-confirm-new');
         if (confirmNewBtn) {
             confirmNewBtn.addEventListener('click', function(e) {
@@ -755,8 +637,6 @@
                 }
             });
         }
-        
-        // Confirmation for existing suspect
         const existingForms = document.querySelectorAll('form[action*="use_existing_suspect"]');
         existingForms.forEach(form => {
             form.addEventListener('submit', function(e) {

@@ -1,911 +1,432 @@
 {% extends "base.html" %}
 
-{% block title %}Welcome - SAPS eDocket Management System{% endblock %}
+{% block title %}SAPS eDocket – Digital Case Management System{% endblock %}
 
 {% block content %}
-<div class="container-fluid px-0">
-    <!-- Hero Section with Background Image -->
-    <section class="hero-section position-relative overflow-hidden">
-        <!-- Background Image Layer -->
-        <div class="hero-bg-wrapper position-absolute top-0 start-0 w-100 h-100">
-            <img src="{{ url_for('static', filename='img/saps-saluting.jpg') }}" 
-                 alt="SAPS Officers Saluting" 
-                 class="hero-bg-img w-100 h-100">
-            <!-- Gradient Overlay for text readability -->
-            <div class="hero-overlay w-100 h-100 position-absolute top-0 start-0"></div>
-        </div>
-
-        <!-- Decorative Elements Layer -->
-        <div class="hero-decorations position-absolute top-0 start-0 w-100 h-100 pointer-events-none">
-            <div class="position-absolute top-0 start-0 w-100 h-100" 
-                 style="background: linear-gradient(135deg, rgba(0, 63, 135, 0.05) 0%, rgba(212, 175, 55, 0.03) 100%);"></div>
-            <div class="position-absolute top-50 start-0 translate-middle-y">
-                <div class="saps-star-pattern" style="transform: rotate(45deg);"></div>
-            </div>
-        </div>
-
-        <!-- Content Layer -->
-        <div class="container py-8 py-lg-10 position-relative" style="z-index: 10;">
-            <div class="row align-items-center min-vh-80">
-                <div class="col-lg-7 mb-5 mb-lg-0">
-                    <div class="mb-4 animate__animated animate__fadeInUp">
-                        <span class="badge bg-primary bg-gradient px-3 py-2 mb-3 d-inline-flex align-items-center">
-                            <i class="fas fa-shield-alt me-2"></i>
-                            Official SAPS System
-                        </span>
-                        <h1 class="display-3 fw-bold text-primary mb-3">
-                            <span class="text-gradient-primary">Securing Justice,</span><br>
-                            <span class="text-gradient-gold">One Digital Docket at a Time</span>
-                        </h1>
-                        <p class="lead mb-4 fs-5 hero-text">
-                            A secure, web-based docket management system built for the South African Police Service. 
-                            Replacing vulnerable manual paper-based systems with advanced digital security, 
-                            biometric verification, and real-time case tracking.
-                        </p>
-                    </div>
-                    
-                    <div class="d-flex flex-column flex-md-row gap-3 mb-5 animate__animated animate__fadeInUp animate__delay-1s">
-                        <a href="{{ url_for('auth.login') }}" class="btn btn-saps btn-lg px-5 py-3 position-relative overflow-hidden">
-                            <div class="position-absolute top-50 start-50 translate-middle btn-ripple"></div>
-                            <i class="fas fa-sign-in-alt me-2"></i> Officer Login Portal
-                        </a>
-                        <a href="{{ url_for('auth.register') }}" class="btn btn-saps-gold btn-lg px-5 py-3 position-relative overflow-hidden">
-                            <div class="position-absolute top-50 start-50 translate-middle btn-ripple"></div>
-                            <i class="fas fa-user-plus me-2"></i> New Officer Registration
-                        </a>
-                    </div>
-                    
-                    <!-- Features Grid -->
-                    <div class="row g-4 animate__animated animate__fadeInUp animate__delay-2s">
-                        <div class="col-md-6">
-                            <div class="feature-card h-100 p-4 rounded-4 shadow-sm border-0 hover-lift">
-                                <div class="feature-icon mb-3">
-                                    <i class="fas fa-lock text-primary"></i>
-                                </div>
-                                <h5 class="fw-bold mb-2">Secure Role-Based Access</h5>
-                                <p class="text-muted mb-0">Advanced RBAC with officer, supervisor, and admin roles ensuring data protection.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="feature-card h-100 p-4 rounded-4 shadow-sm border-0 hover-lift">
-                                <div class="feature-icon mb-3">
-                                    <i class="fas fa-robot text-gold"></i>
-                                </div>
-                                <h5 class="fw-bold mb-2">Facial Recognition System</h5>
-                                <p class="text-muted mb-0">Powered biometric verification to identify repeat offenders instantly.</p>
-                            </div>
-                        </div>
+<!-- Carousel Start -->
+<div class="container-fluid p-0">
+    <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="w-100" src="{{ url_for('static', filename='img/carousel-1.jpg') }}" alt="SAPS eDocket">
+                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                    <div class="p-3" style="max-width: 900px;">
+                        <h5 class="text-white text-uppercase mb-3 animated slideInDown">South African Police Service</h5>
+                        <h1 class="display-1 text-white mb-md-4 animated zoomIn">Digital Docket Management</h1>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Officer Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light py-md-3 px-md-5 animated slideInRight">Register</a>
                     </div>
                 </div>
-                
-                <!-- Interactive Demo Card -->
-                <div class="col-lg-5">
-                    <div class="demo-container position-relative">
-                        <div class="case-demo-card card border-0 shadow-lg rounded-4 p-4 hover-3d">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center mb-4">
-                                    <div class="badge-bg bg-primary-gradient rounded-3 p-3 me-3">
-                                        <i class="fas fa-file-alt fa-2x text-white"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h4 class="mb-1 fw-bold">Case #CAS-2024-01-0001</h4>
-                                        <p class="text-muted mb-0">High-Priority Theft Investigation</p>
-                                    </div>
-                                    <span class="status-badge status-investigating">Active</span>
-                                </div>
-                                
-                                <div class="progress-wrapper mb-4">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-primary fw-semibold">Investigation Progress</span>
-                                        <span class="text-primary fw-bold">65%</span>
-                                    </div>
-                                    <div class="progress rounded-pill" style="height: 10px;">
-                                        <div class="progress-bar bg-primary-gradient rounded-pill" 
-                                             style="width: 65%" 
-                                             role="progressbar">
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="row g-3 mb-4">
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <div class="icon-circle bg-blue-light p-2 rounded-circle me-3">
-                                                <i class="fas fa-user text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <small class="text-muted d-block">Assigned Officer</small>
-                                                <span class="fw-semibold">Det. T. Mazibuko</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="d-flex align-items-center">
-                                            <div class="icon-circle bg-gold-light p-2 rounded-circle me-3">
-                                                <i class="fas fa-clock text-gold"></i>
-                                            </div>
-                                            <div>
-                                                <small class="text-muted d-block">Last Updated</small>
-                                                <span class="fw-semibold">2 hours ago</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Face Recognition Demo -->
-                                <div class="face-recognition-demo border rounded-3 p-3 mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="face-match-indicator me-3">
-                                            <div class="face-icon">
-                                                <i class="fas fa-user-check text-success"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-1 fw-bold text-success">Face Match Verified</h6>
-                                            <p class="text-muted small mb-0">Biometric match found in database - 92% confidence</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <button class="btn btn-outline-primary w-100 py-2">
-                                    <i class="fas fa-eye me-2"></i>View Case Details
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Floating Elements -->
-                      <div class="floating-card card shadow-sm border-0 position-absolute top-0 end-0 translate-middle-y hover-float">
-    <div class="card-body p-3">
-        <div class="d-flex align-items-center">
-            <i class="fas fa-user me-2"></i>
-            <span class="small fw-semibold">Developed by; Shichabo Nkuna</span>
-        </div>
-    </div>
-</div>
-
-                        
-                       <div class="floating-card card shadow-sm border-0 position-absolute bottom-0 start-0 hover-float">
-    <div class="card-body p-3">
-        <div class="d-flex align-items-center">
-            <i class="fas fa-user-graduate me-2"></i>
-            <span class="small fw-semibold">ICT Grad</span>
-        </div>
-    </div>
-</div>
-
+            </div>
+            <div class="carousel-item">
+                <img class="w-100" src="{{ url_for('static', filename='img/carousel-2.jpg') }}" alt="Biometric Security">
+                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                    <div class="p-3" style="max-width: 900px;">
+                        <h5 class="text-white text-uppercase mb-3 animated slideInDown">Biometric & AI-Powered</h5>
+                        <h1 class="display-1 text-white mb-md-4 animated zoomIn">Facial Recognition & Intelligence</h1>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light py-md-3 px-md-5 animated slideInRight">Register</a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+        <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#header-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+<!-- Carousel End -->
 
-    <!-- System Features Section -->
-    <section class="py-8 bg-light">
-        <div class="container">
-            <div class="text-center mb-7">
-                <span class="badge bg-primary-gradient px-4 py-2 mb-3">Core Technology</span>
-                <h2 class="display-5 fw-bold mb-3">Advanced Police Case Management</h2>
-                <p class="lead text-muted mx-auto" style="max-width: 700px;">
-                    Built with modern Python Flask architecture and integrated biometric security
+<!-- Facts Start -->
+<div class="container-fluid facts py-5 pt-lg-0">
+    <div class="container py-5 pt-lg-0">
+        <div class="row gx-0">
+            <div class="col-lg-4 wow zoomIn" data-wow-delay="0.1s">
+                <div class="bg-primary shadow d-flex align-items-center justify-content-center p-4" style="height: 150px;">
+                    <div class="bg-white d-flex align-items-center justify-content-center rounded mb-2" style="width: 60px; height: 60px;">
+                        <i class="fa fa-users text-primary"></i>
+                    </div>
+                    <div class="ps-4">
+                        <h5 class="text-white mb-0">Active Officers</h5>
+                        <h1 class="text-white mb-0" data-toggle="counter-up">1247</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 wow zoomIn" data-wow-delay="0.3s">
+                <div class="bg-light shadow d-flex align-items-center justify-content-center p-4" style="height: 150px;">
+                    <div class="bg-primary d-flex align-items-center justify-content-center rounded mb-2" style="width: 60px; height: 60px;">
+                        <i class="fa fa-check text-white"></i>
+                    </div>
+                    <div class="ps-4">
+                        <h5 class="text-primary mb-0">Cases Closed</h5>
+                        <h1 class="mb-0" data-toggle="counter-up">2835</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 wow zoomIn" data-wow-delay="0.6s">
+                <div class="bg-primary shadow d-flex align-items-center justify-content-center p-4" style="height: 150px;">
+                    <div class="bg-white d-flex align-items-center justify-content-center rounded mb-2" style="width: 60px; height: 60px;">
+                        <i class="fa fa-gavel text-primary"></i>
+                    </div>
+                    <div class="ps-4">
+                        <h5 class="text-white mb-0">Convictions</h5>
+                        <h1 class="text-white mb-0" data-toggle="counter-up">1946</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Facts End -->
+
+<!-- About Start -->
+<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <div class="section-title position-relative pb-3 mb-5">
+                    <h5 class="fw-bold text-primary text-uppercase">About the System</h5>
+                    <h1 class="mb-0">The Future of Criminal Justice Workflow</h1>
+                </div>
+                <p class="mb-4">
+                    <strong>SAPS eDocket</strong> is a secure, web-based digital case management platform built to replace vulnerable paper dockets. 
+                    It empowers law enforcement officers with real‑time tracking, biometric verification, role‑based access, and comprehensive audit trails. 
+                    Designed for the South African Police Service, it ensures integrity, transparency, and efficiency from case opening to conviction.
                 </p>
+                <div class="row g-0 mb-3">
+                    <div class="col-sm-6 wow zoomIn" data-wow-delay="0.2s">
+                        <h5 class="mb-3"><i class="fa fa-shield-alt text-primary me-3"></i>Military‑Grade Security</h5>
+                        <h5 class="mb-3"><i class="fa fa-robot text-primary me-3"></i>Face Recognition</h5>
+                    </div>
+                    <div class="col-sm-6 wow zoomIn" data-wow-delay="0.4s">
+                        <h5 class="mb-3"><i class="fa fa-user-lock text-primary me-3"></i>Role‑Based Access</h5>
+                        <h5 class="mb-3"><i class="fa fa-history text-primary me-3"></i>Full Audit Trails</h5>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-4 wow fadeIn" data-wow-delay="0.6s">
+                    <div class="bg-primary d-flex align-items-center justify-content-center rounded" style="width: 60px; height: 60px;">
+                        <i class="fa fa-phone-alt text-white"></i>
+                    </div>
+                    <div class="ps-4">
+                        <h5 class="mb-2">Need help? Call our support</h5>
+                        <h4 class="text-primary mb-0">+27 12 345 6789</h4>
+                    </div>
+                </div>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary py-3 px-5 mt-3 wow zoomIn" data-wow-delay="0.9s">Get Started</a>
             </div>
-            
-            <div class="row g-5">
-                <div class="col-md-6 col-lg-3">
-                    <div class="tech-card text-center p-4 rounded-4 hover-lift">
-                        <div class="tech-icon mx-auto mb-4">
-                            <i class="fas fa-database"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">SQLAlchemy</h4>
-                        <p class="text-muted mb-0">Robust ORM with SQLite/PostgreSQL support for secure data handling and migrations.</p>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3">
-                    <div class="tech-card text-center p-4 rounded-4 hover-lift">
-                        <div class="tech-icon mx-auto mb-4">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">Face Recognition</h4>
-                        <p class="text-muted mb-0">Powered biometric system with facial encoding and duplicate detection.</p>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3">
-                    <div class="tech-card text-center p-4 rounded-4 hover-lift">
-                        <div class="tech-icon mx-auto mb-4">
-                            <i class="fas fa-user-shield"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">RBAC Security</h4>
-                        <p class="text-muted mb-0">Role-based access control with Flask-Login for officer, supervisor, and admin roles.</p>
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-lg-3">
-                    <div class="tech-card text-center p-4 rounded-4 hover-lift">
-                        <div class="tech-icon mx-auto mb-4">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <h4 class="fw-bold mb-3">Real-time Updates</h4>
-                        <p class="text-muted mb-0">Case tracking with audit trails, status updates, and automatic case numbering.</p>
-                    </div>
+            <div class="col-lg-5" style="min-height: 500px;">
+                <div class="position-relative h-100">
+                    <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.9s" src="{{ url_for('static', filename='img/about.jpg') }}" style="object-fit: cover;" alt="SAPS eDocket">
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Developer Section -->
-    <section class="py-8 bg-white">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-5">
-                    <div class="developer-card card border-0 shadow-lg rounded-4 overflow-hidden hover-lift">
-                        <div class="card-body p-4 p-lg-5">
-                            <div class="text-center mb-4">
-                                <div class="developer-avatar mx-auto mb-3">
-                                    <img src="{{ url_for('static', filename='img/shichabo.jpg') }}" 
-                                         alt="Shichabo Nkuna" 
-                                         class="rounded-circle img-fluid border border-4 border-primary">
-                                    <div class="status-indicator bg-success"></div>
-                                </div>
-                                <h3 class="fw-bold mb-1">Shichabo Nkuna</h3>
-                                <p class="text-gold mb-3">Full-Stack Software Developer</p>
-                                <div class="d-flex justify-content-center gap-2 mb-3">
-                                    <span class="badge bg-primary">Python Flask</span>
-                                    <span class="badge bg-gold">C# .NET</span>
-                                    <span class="badge bg-blue-light">Azure</span>
-                                </div>
-                            </div>
-                            
-                            <div class="contact-info mb-4">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-envelope text-primary me-3"></i>
-                                    <span>shichabonkuna22@gmail.com</span>
-                                </div>
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-phone text-primary me-3"></i>
-                                    <span>062 719 5389</span>
-                                </div>
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-map-marker-alt text-primary me-3"></i>
-                                    <span>Johannesburg, South Africa</span>
-                                </div>
-                            </div>
-                            
-                            <div class="social-links d-flex justify-content-center gap-3">
-                                <a href="https://shichabonkuna22-star.github.io/portfolio/ " 
-                                   class="social-icon" 
-                                   target="_blank">
-                                    <i class="fas fa-globe"></i>
-                                </a>
-                                <a href="#" class="social-icon">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                                <a href="#" class="social-icon">
-                                    <i class="fab fa-linkedin"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-lg-7">
-                    <div class="ps-lg-4">
-                        <span class="badge bg-gold-gradient px-3 py-2 mb-3">Lead Developer</span>
-                        <h2 class="display-5 fw-bold mb-4">System Architect & Developer</h2>
-                        
-                        <div class="mb-5">
-                            <p class="lead text-dark mb-4">
-                                Software Developer and ICT Graduate specializing in back-end web development, 
-                                object-oriented programming, and full-stack application design.
-                            </p>
-                            
-                            <div class="row g-3 mb-4">
-                                <div class="col-md-6">
-                                    <div class="skill-item d-flex align-items-center p-3 rounded-3 hover-scale">
-                                        <div class="skill-icon me-3">
-                                            <i class="fas fa-server text-primary"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="fw-bold mb-1">Backend Development</h6>
-                                            <p class="text-muted small mb-0">Python Flask, REST APIs, SQLAlchemy</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="skill-item d-flex align-items-center p-3 rounded-3 hover-scale">
-                                        <div class="skill-icon me-3">
-                                            <i class="fas fa-cloud text-gold"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="fw-bold mb-1">Cloud Infrastructure</h6>
-                                            <p class="text-muted small mb-0">Azure, Oracle Cloud, CI/CD</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Certifications -->
-                        <div class="certifications mb-4">
-                            <h5 class="fw-bold mb-3">Certifications & Expertise</h5>
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <div class="cert-badge p-2 rounded-3 hover-scale-sm">
-                                        <small class="fw-semibold"><i class="fas fa-certificate text-gold me-1"></i> OCI Architect</small>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="cert-badge p-2 rounded-3 hover-scale-sm">
-                                        <small class="fw-semibold"><i class="fas fa-certificate text-gold me-1"></i> AI Foundations</small>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="cert-badge p-2 rounded-3 hover-scale-sm">
-                                        <small class="fw-semibold"><i class="fas fa-shield-alt text-primary me-1"></i> Cybersecurity</small>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="cert-badge p-2 rounded-3 hover-scale-sm">
-                                        <small class="fw-semibold"><i class="fas fa-network-wired text-primary me-1"></i> Network Security</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <a href="https://shichabonkuna22-star.github.io/portfolio/ " 
-                           target="_blank" 
-                           class="btn btn-outline-primary px-4 py-2 mt-3">
-                            <i class="fas fa-external-link-alt me-2"></i>View Full Portfolio
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- System Architecture -->
-    <section class="py-8 bg-dark text-white">
-        <div class="container">
-            <div class="text-center mb-7">
-                <span class="badge bg-gold-gradient px-4 py-2 mb-3">System Architecture</span>
-                <h2 class="display-5 fw-bold mb-3">Built for Scale & Security</h2>
-            </div>
-            
-            <div class="row g-5">
-                <div class="col-lg-4">
-                    <div class="arch-card p-4 rounded-4 h-100 hover-glow">
-                        <div class="arch-number mb-3">01</div>
-                        <h4 class="fw-bold mb-3">Database Layer</h4>
-                        <p class="text-light mb-0">SQLAlchemy ORM with SQLite (development) and PostgreSQL (production) support. 
-                           Role-based data access with audit trails and encryption-ready architecture.</p>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="arch-card p-4 rounded-4 h-100 hover-glow">
-                        <div class="arch-number mb-3">02</div>
-                        <h4 class="fw-bold mb-3">Application Logic</h4>
-                        <p class="text-light mb-0">Python Flask Blueprints with modular architecture. 
-                           Face recognition system with OpenCV integration. 
-                           Automatic case/suspect matching algorithms.</p>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="arch-card p-4 rounded-4 h-100 hover-glow">
-                        <div class="arch-number mb-3">03</div>
-                        <h4 class="fw-bold mb-3">Security Layer</h4>
-                        <p class="text-light mb-0">Flask-Login authentication with SAPS email validation. 
-                           RBAC with officer, supervisor, admin roles. 
-                           Input validation and secure file upload handling.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 </div>
+<!-- About End -->
+
+<!-- Features Start -->
+<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+            <h5 class="fw-bold text-primary text-uppercase">Why SAPS eDocket</h5>
+            <h1 class="mb-0">Built for Law Enforcement Excellence</h1>
+        </div>
+        <div class="row g-5">
+            <div class="col-lg-4">
+                <div class="row g-5">
+                    <div class="col-12 wow zoomIn" data-wow-delay="0.2s">
+                        <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fa fa-folder-open text-white"></i>
+                        </div>
+                        <h4>Digital Docket Management</h4>
+                        <p class="mb-0">Create, assign, and track criminal cases from initial report to final disposition – all in one secure platform.</p>
+                    </div>
+                    <div class="col-12 wow zoomIn" data-wow-delay="0.6s">
+                        <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fa fa-user-check text-white"></i>
+                        </div>
+                        <h4>Suspect Identification</h4>
+                        <p class="mb-0">Search and link suspects across cases using ID numbers, names, or biometric facial recognition.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 wow zoomIn" data-wow-delay="0.9s" style="min-height: 350px;">
+                <div class="position-relative h-100">
+                    <img class="position-absolute w-100 h-100 rounded wow zoomIn" data-wow-delay="0.1s" src="{{ url_for('static', filename='img/feature.jpeg') }}" style="object-fit: cover;" alt="Features">
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="row g-5">
+                    <div class="col-12 wow zoomIn" data-wow-delay="0.4s">
+                        <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fa fa-lock text-white"></i>
+                        </div>
+                        <h4>Security & Compliance</h4>
+                        <p class="mb-0">Military-grade encryption, role‑based permissions, and full audit logs ensure data integrity and regulatory compliance.</p>
+                    </div>
+                    <div class="col-12 wow zoomIn" data-wow-delay="0.8s">
+                        <div class="bg-primary rounded d-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fa fa-chart-line text-white"></i>
+                        </div>
+                        <h4>Actionable Analytics</h4>
+                        <p class="mb-0">Real‑time dashboards and reports provide insights into case load, resolution times, and officer performance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Features End -->
+
+<!-- Services Start -->
+<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+            <h5 class="fw-bold text-primary text-uppercase">Our Core Services</h5>
+            <h1 class="mb-0">Complete Case Management Ecosystem</h1>
+        </div>
+        <div class="row g-5">
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.3s">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon">
+                        <i class="fa fa-gavel text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Case Tracking</h4>
+                    <p class="m-0">End‑to‑end visibility from incident report to court proceedings, with real‑time status updates.</p>
+                    <a class="btn btn-lg btn-primary rounded" href="#">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.6s">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon">
+                        <i class="fa fa-user-secret text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Suspect & Evidence Management</h4>
+                    <p class="m-0">Centralised suspect profiles linked to cases, evidence uploads, and document storage.</p>
+                    <a class="btn btn-lg btn-primary rounded" href="#">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.9s">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon">
+                        <i class="fa fa-robot text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Facial Recognition</h4>
+                    <p class="m-0">OpenCV‑based biometric identification to link suspects across cases and reduce duplicates.</p>
+                    <a class="btn btn-lg btn-primary rounded" href="#">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.3s">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon">
+                        <i class="fa fa-file-alt text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Secure Document Storage</h4>
+                    <p class="m-0">Encrypted storage for dockets, statements, warrants, and evidence – accessible only by authorised personnel.</p>
+                    <a class="btn btn-lg btn-primary rounded" href="#">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.6s">
+                <div class="service-item bg-light rounded d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="service-icon">
+                        <i class="fa fa-chart-pie text-white"></i>
+                    </div>
+                    <h4 class="mb-3">Analytics & Reporting</h4>
+                    <p class="m-0">Automated reports and dashboards to monitor caseload, performance, and operational trends.</p>
+                    <a class="btn btn-lg btn-primary rounded" href="#">
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 wow zoomIn" data-wow-delay="0.9s">
+                <div class="position-relative bg-primary rounded h-100 d-flex flex-column align-items-center justify-content-center text-center p-5">
+                    <h3 class="text-white mb-3">Need Assistance?</h3>
+                    <p class="text-white mb-3">Our support team is available 24/7 to help with any system issues or questions.</p>
+                    <h2 class="text-white mb-0">+27 12 345 6789</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Services End -->
+
+<!-- Developer Section -->
+<div class="container-fluid developer-section py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width:700px;">
+            <h5 class="fw-bold text-primary text-uppercase">Developer</h5>
+            <h1 class="mb-0">Website Designed & Developed By</h1>
+        </div>
+        <div class="row align-items-center g-5">
+            <div class="col-lg-4 text-center">
+                <img src="{{ url_for('static', filename='img/shichabo.png') }}" class="developer-img" alt="Shichabo Nkuna" style="width:280px;height:280px;object-fit:cover;border-radius:50%;border:6px solid #06A3DA;box-shadow:0 10px 30px rgba(0,0,0,.15);">
+            </div>
+            <div class="col-lg-8">
+                <h2 class="text-primary mb-3">Shichabo Nkuna</h2>
+                <h5 class="mb-4">Software Developer</h5>
+                <p class="mb-4">
+                    Software Developer with hands‑on experience in backend development,
+                    software testing, and cloud‑based web applications using
+                    <strong>C#</strong>, <strong>ASP.NET Core MVC</strong>, <strong>Entity Framework</strong>,
+                    <strong>Python Flask</strong>, <strong>REST APIs</strong>,
+                    and database design across both <strong>SQL</strong> and <strong>NoSQL</strong> databases.
+                </p>
+                <div class="developer-links">
+                    <p class="mb-2"><i class="fas fa-envelope text-primary me-2"></i><a href="mailto:shichabonkuna22@gmail.com">shichabonkuna22@gmail.com</a></p>
+                    <p class="mb-4"><i class="fas fa-globe text-primary me-2"></i><a href="https://shichabonkuna22-star.github.io/portfolio/" target="_blank">Portfolio Website</a></p>
+                    <a href="mailto:shichabonkuna22@gmail.com" class="btn btn-primary me-3">Contact Me</a>
+                    <a href="https://shichabonkuna22-star.github.io/portfolio/" target="_blank" class="btn btn-outline-primary">View Portfolio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Developer End -->
+
+<!-- Team Start -->
+<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="section-title text-center position-relative pb-3 mb-5 mx-auto" style="max-width: 600px;">
+            <h5 class="fw-bold text-primary text-uppercase">SAPS Leadership</h5>
+            <h1 class="mb-0">Driving Justice & Safety in South Africa</h1>
+        </div>
+        <div class="row g-5">
+            <div class="col-lg-4 wow slideInUp" data-wow-delay="0.3s">
+                <div class="team-item bg-light rounded overflow-hidden">
+                    <div class="team-img position-relative overflow-hidden" style="height: 400px;">
+                        <img src="{{ url_for('static', filename='img/team-1.png') }}" alt="Prof Firoz Cachalia" style="width:100%;height:100%;object-fit:cover;object-position:top center;">
+                        <div class="team-social">
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-twitter fw-normal"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-instagram fw-normal"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-linkedin-in fw-normal"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <h4 class="text-primary">Prof Firoz Cachalia</h4>
+                        <p class="text-uppercase m-0">Minister</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 wow slideInUp" data-wow-delay="0.6s">
+                <div class="team-item bg-light rounded overflow-hidden">
+                    <div class="team-img position-relative overflow-hidden" style="height: 400px;">
+                        <img src="{{ url_for('static', filename='img/team-2.jpg') }}" alt="Gen. Nhlanhla Mkhwanazi" style="width:100%;height:100%;object-fit:cover;object-position:top center;">
+                        <div class="team-social">
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-twitter fw-normal"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-instagram fw-normal"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-linkedin-in fw-normal"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <h4 class="text-primary">Gen. Nhlanhla Mkhwanazi</h4>
+                        <p class="text-uppercase m-0">Police Commissioner</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 wow slideInUp" data-wow-delay="0.9s">
+                <div class="team-item bg-light rounded overflow-hidden">
+                    <div class="team-img position-relative overflow-hidden" style="height: 400px;">
+                        <img src="{{ url_for('static', filename='img/team-3.jpg') }}" alt="Bheki Cele" style="width:100%;height:100%;object-fit:cover;object-position:top center;">
+                        <div class="team-social">
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-twitter fw-normal"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-facebook-f fw-normal"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-instagram fw-normal"></i></a>
+                            <a class="btn btn-lg btn-primary btn-lg-square rounded" href="#"><i class="fab fa-linkedin-in fw-normal"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <h4 class="text-primary">Bheki Cele</h4>
+                        <p class="text-uppercase m-0">Former Minister</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Team End -->
+
+<!-- Testimonial Start -->
+<div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="section-title text-center position-relative pb-3 mb-4 mx-auto" style="max-width: 600px;">
+            <h5 class="fw-bold text-primary text-uppercase">User Testimonials</h5>
+            <h1 class="mb-0">What Our Officers Say</h1>
+        </div>
+        <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.6s">
+            <div class="testimonial-item bg-light my-4">
+                <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
+                    <img class="img-fluid rounded" src="{{ url_for('static', filename='img/testimonial-1.jpg') }}" style="width: 60px; height: 60px;" alt="Officer">
+                    <div class="ps-4">
+                        <h4 class="text-primary mb-1">Capt. M. Khumalo</h4>
+                        <small class="text-uppercase">Detective Unit, Johannesburg</small>
+                    </div>
+                </div>
+                <div class="pt-4 pb-5 px-5">
+                    “The eDocket system has cut our case processing time in half. Having all evidence and suspect data digital has made collaboration seamless.”
+                </div>
+            </div>
+            <div class="testimonial-item bg-light my-4">
+                <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
+                    <img class="img-fluid rounded" src="{{ url_for('static', filename='img/testimonial-2.jpg') }}" style="width: 60px; height: 60px;" alt="Officer">
+                    <div class="ps-4">
+                        <h4 class="text-primary mb-1">Lt. Col. S. Naidoo</h4>
+                        <small class="text-uppercase">Criminal Record Centre, Pretoria</small>
+                    </div>
+                </div>
+                <div class="pt-4 pb-5 px-5">
+                    “The facial recognition feature is a game‑changer. We’ve already identified multiple repeat offenders across different cases.”
+                </div>
+            </div>
+            <div class="testimonial-item bg-light my-4">
+                <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
+                    <img class="img-fluid rounded" src="{{ url_for('static', filename='img/testimonial-3.jpg') }}" style="width: 60px; height: 60px;" alt="Officer">
+                    <div class="ps-4">
+                        <h4 class="text-primary mb-1">Brig. M. van der Merwe</h4>
+                        <small class="text-uppercase">Station Commander, Cape Town</small>
+                    </div>
+                </div>
+                <div class="pt-4 pb-5 px-5">
+                    “The intuitive dashboard gives me a real‑time view of my station’s caseload. It’s the transparency we needed for accountability.”
+                </div>
+            </div>
+            <div class="testimonial-item bg-light my-4">
+                <div class="d-flex align-items-center border-bottom pt-5 pb-4 px-5">
+                    <img class="img-fluid rounded" src="{{ url_for('static', filename='img/testimonial-4.jpg') }}" style="width: 60px; height: 60px;" alt="Officer">
+                    <div class="ps-4">
+                        <h4 class="text-primary mb-1">Insp. T. Radebe</h4>
+                        <small class="text-uppercase">Family Violence Unit, Durban</small>
+                    </div>
+                </div>
+                <div class="pt-4 pb-5 px-5">
+                    “Secure, fast, and reliable. The audit trails give us confidence in the integrity of our dockets during court proceedings.”
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Testimonial End -->
 
 <style>
-    :root {
-        --saps-blue: #003f87;
-        --saps-blue-dark: #002a5c;
-        --saps-blue-light: #e6f0ff;
-        --saps-gold: #d4af37;
-        --saps-gold-dark: #b8960c;
-    }
-
-    /* Hero Section with Background Image */
-    .hero-section {
-        position: relative;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-    }
-
-    /* Background Image Wrapper */
-    .hero-bg-wrapper {
-        z-index: 0;
-        overflow: hidden;
-    }
-
-    .hero-bg-img {
-        object-fit: cover;
-        object-position: center top;
-        filter: brightness(0.9) contrast(1.1);
-    }
-
-    /* Gradient Overlay for readability */
-    .hero-overlay {
-        background: linear-gradient(135deg, 
-            rgba(248, 249, 252, 0.85) 0%, 
-            rgba(233, 236, 239, 0.75) 50%,
-            rgba(248, 249, 252, 0.80) 100%);
-        backdrop-filter: blur(1px);
-    }
-
-    /* Decorative Elements */
-    .hero-decorations {
-        z-index: 1;
-    }
-
-    /* Hero Text Styling */
-    .hero-text {
-        color: #2c3e50;
-        text-shadow: 0 1px 2px rgba(255,255,255,0.8);
-        font-weight: 500;
-    }
-
-    /* SAPS Star Pattern */
-    .saps-star-pattern {
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(0, 63, 135, 0.03) 0%, transparent 70%);
-        position: relative;
-    }
-    
-    .saps-star-pattern::before {
-        content: '★';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 120px;
-        color: rgba(0, 63, 135, 0.1);
-    }
-
-    /* Text Gradients */
-    .text-gradient-primary {
-        background: linear-gradient(135deg, var(--saps-blue) 0%, var(--saps-blue-dark) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    .text-gradient-gold {
-        background: linear-gradient(135deg, var(--saps-gold) 0%, #c9a227 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    /* Button Styles */
-    .btn-saps {
-        background: linear-gradient(135deg, var(--saps-blue) 0%, var(--saps-blue-dark) 100%);
-        color: white;
-        border: none;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-    }
-
-    .btn-saps:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0, 63, 135, 0.3);
-        color: white;
-    }
-
-    .btn-saps-gold {
-        background: linear-gradient(135deg, var(--saps-gold) 0%, var(--saps-gold-dark) 100%);
-        color: white;
-        border: none;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-    }
-
-    .btn-saps-gold:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
-        color: white;
-    }
-
-    /* Ripple Effect */
-    .btn-ripple {
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.4);
-        position: absolute;
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-        pointer-events: none;
-    }
-
-    .btn-ripple.animate {
-        width: 300px;
-        height: 300px;
-    }
-
-    /* Hover Effects */
-    .hover-lift {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-    }
-    
-    .hover-lift:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 63, 135, 0.15) !important;
-    }
-    
-    .hover-3d {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        transform-style: preserve-3d;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-    }
-    
-    .hover-3d:hover {
-        transform: translateY(-5px) rotateX(2deg) rotateY(2deg);
-        box-shadow: 20px 20px 60px rgba(0, 63, 135, 0.15),
-                    -20px -20px 60px rgba(255, 255, 255, 0.8) !important;
-    }
-    
-    .hover-float {
-        animation: float 3s ease-in-out infinite;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-    }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    
-    .hover-scale {
-        transition: transform 0.3s ease;
-        background: rgba(255, 255, 255, 0.8);
-    }
-    
-    .hover-scale:hover {
-        transform: scale(1.02);
-        background: var(--saps-blue-light);
-    }
-    
-    .hover-scale-sm {
-        transition: transform 0.2s ease;
-        background: rgba(255, 255, 255, 0.9);
-    }
-    
-    .hover-scale-sm:hover {
-        transform: scale(1.05);
-        background: rgba(0, 63, 135, 0.05);
-    }
-    
-    .hover-glow {
-        transition: all 0.3s ease;
-        border: 1px solid transparent;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-    }
-    
-    .hover-glow:hover {
-        border-color: var(--saps-gold);
-        box-shadow: 0 0 30px rgba(212, 175, 55, 0.3) !important;
-    }
-
-    /* Feature Cards */
-    .feature-card {
-        background: rgba(255, 255, 255, 0.95);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 63, 135, 0.1);
-    }
-    
-    .feature-card:hover {
-        background: linear-gradient(135deg, white, var(--saps-blue-light));
-    }
-    
-    .feature-icon {
-        width: 60px;
-        height: 60px;
-        background: var(--saps-blue-light);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        color: var(--saps-blue);
-        transition: all 0.3s ease;
-    }
-    
-    .feature-card:hover .feature-icon {
-        transform: rotate(15deg) scale(1.1);
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-    }
-
-    /* Demo Card Specifics */
-    .case-demo-card {
-        background: rgba(255, 255, 255, 0.95);
-    }
-
-    .badge-bg {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .bg-primary-gradient {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-    }
-
-    .bg-gold-gradient {
-        background: linear-gradient(135deg, var(--saps-gold), var(--saps-gold-dark));
-    }
-
-    .status-badge {
-        padding: 0.5rem 1rem;
-        border-radius: 50rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-    }
-
-    .status-investigating {
-        background: rgba(212, 175, 55, 0.15);
-        color: var(--saps-gold-dark);
-    }
-
-    .bg-blue-light {
-        background: var(--saps-blue-light);
-    }
-
-    .bg-gold-light {
-        background: rgba(212, 175, 55, 0.1);
-    }
-
-    .text-gold {
-        color: var(--saps-gold);
-    }
-
-    .icon-circle {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Tech Cards */
-    .tech-card {
-        background: rgba(255, 255, 255, 0.95);
-        border: 1px solid rgba(0, 63, 135, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .tech-icon {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, var(--saps-blue-light), rgba(0, 63, 135, 0.1));
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: var(--saps-blue);
-        transition: all 0.3s ease;
-    }
-    
-    .tech-card:hover .tech-icon {
-        transform: scale(1.1);
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-    }
-
-    /* Developer Card */
-    .developer-card {
-        position: relative;
-        overflow: visible;
-        background: rgba(255, 255, 255, 0.95);
-    }
-    
-    .developer-card::before {
-        content: '';
-        position: absolute;
-        top: -10px;
-        left: -10px;
-        right: -10px;
-        bottom: -10px;
-        background: linear-gradient(45deg, var(--saps-blue), var(--saps-gold), var(--saps-blue));
-        z-index: -1;
-        border-radius: 20px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    
-    .developer-card:hover::before {
-        opacity: 0.3;
-    }
-    
-    .developer-avatar {
-        width: 180px;
-        height: 180px;
-        position: relative;
-    }
-    
-    .developer-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-    
-    .developer-avatar:hover img {
-        transform: scale(1.05);
-    }
-    
-    .status-indicator {
-        position: absolute;
-        bottom: 20px;
-        right: 20px;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 3px solid white;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    /* Social Icons */
-    .social-icon {
-        width: 40px;
-        height: 40px;
-        background: var(--saps-blue-light);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--saps-blue);
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-    
-    .social-icon:hover {
-        transform: translateY(-3px);
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        box-shadow: 0 5px 15px rgba(0, 63, 135, 0.3);
-    }
-
-    /* Certifications */
-    .cert-badge {
-        border: 1px solid rgba(0, 63, 135, 0.1);
-        background: rgba(255, 255, 255, 0.9);
-    }
-
-    /* Architecture Cards */
-    .arch-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .arch-number {
-        font-size: 3rem;
-        font-weight: 800;
-        color: rgba(212, 175, 55, 0.3);
-        line-height: 1;
-    }
-
-    /* Utilities */
-    .min-vh-80 {
-        min-height: 80vh;
-    }
-
-    .py-8 {
-        padding-top: 5rem;
-        padding-bottom: 5rem;
-    }
-
-    .py-10 {
-        padding-top: 6rem;
-        padding-bottom: 6rem;
-    }
-
-    .mb-7 {
-        margin-bottom: 4rem;
-    }
-
-    /* Responsive */
-    @media (max-width: 991.98px) {
-        .hero-section {
-            min-height: auto;
-            padding: 4rem 0;
-        }
-        
-        .min-vh-80 {
-            min-height: auto;
-        }
-        
-        .hero-bg-img {
-            object-position: center;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .py-8 {
-            padding-top: 3rem;
-            padding-bottom: 3rem;
-        }
-        
-        .display-3 {
-            font-size: 2.5rem;
-        }
-        
-        .display-5 {
-            font-size: 2rem;
-        }
-
-        .hero-overlay {
-            background: linear-gradient(135deg, 
-                rgba(248, 249, 252, 0.90) 0%, 
-                rgba(233, 236, 239, 0.85) 100%);
-        }
-    }
+    .developer-img { width:280px; height:280px; object-fit:cover; object-position:top center; border-radius:50%; border:6px solid #06A3DA; box-shadow:0 10px 30px rgba(0,0,0,.15); }
+    .developer-section { background:#f8f9fa; }
+    .developer-links a { text-decoration:none; }
+    .team-img { height:400px; }
+    .team-img img { width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
+    .service-item .service-icon i { font-size: 2rem; }
 </style>
-
-<script>
-    // Initialize animations and interactions
-    $(document).ready(function() {
-        // Ripple effect for buttons
-        $('.btn-saps, .btn-saps-gold').on('click', function(e) {
-            let x = e.pageX - $(this).offset().left;
-            let y = e.pageY - $(this).offset().top;
-            
-            $(this).find('.btn-ripple').css({
-                left: x,
-                top: y
-            }).addClass('animate');
-            
-            setTimeout(() => {
-                $(this).find('.btn-ripple').removeClass('animate');
-            }, 600);
-        });
-        
-        // Intersection observer for scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
-        
-        // Observe elements
-        document.querySelectorAll('.tech-card, .arch-card, .feature-card').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Parallax effect for background (subtle)
-        $(window).scroll(function() {
-            var scrolled = $(window).scrollTop();
-            $('.hero-bg-img').css('transform', 'translateY(' + (scrolled * 0.3) + 'px)');
-        });
-    });
-</script>
 {% endblock %}

@@ -1,9 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}Create New Case{% endblock %}
+{% block title %}Create New Case – SAPS eDocket{% endblock %}
+
+{% block page_header %}
+<div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
+    <div class="row py-5">
+        <div class="col-12 pt-lg-5 mt-lg-5 text-center">
+            <h1 class="display-4 text-white animated zoomIn">Create New Case</h1>
+            <a href="{{ url_for('main.index') }}" class="h5 text-white">Home</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="{{ url_for('cases.view_cases') }}" class="h5 text-white">Cases</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="#" class="h5 text-white">Create</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container py-5">
+    <!-- (all existing content from the original create.html, just wrapped in the container) -->
+    <!-- The entire HTML from the original create.html goes here, exactly as is -->
+    <!-- I will copy the full content below -->
+    
+    <!-- Original content starts -->
     <div class="row">
         <div class="col-12">
             <h2 class="mb-4"><i class="fas fa-folder-plus me-2"></i>Create New Case</h2>
@@ -50,41 +70,41 @@
                         </div>
                         {% endif %}
 
-                            <div class="row">
-    <!-- ID Number Input -->
-    <div class="col-md-6 mb-3">
-        <label for="idNumber" class="form-label">ID Number *</label>
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-            <input type="text" 
-                   class="form-control" 
-                   id="idNumber" 
-                   name="id_number" 
-                   maxlength="13" 
-                   placeholder="Enter 13-digit ID number"
-                   value="{{ suspect_form.id_number.data or '' }}"
-                   {% if prefill_suspect %}readonly{% endif %}>
-        </div>
-    </div>
-    
-    <!-- Status/Warning Message -->
-    <div class="col-md-6 mb-3">
-        <label class="form-label">Status</label>
-        <div id="currentStatus" class="p-3 rounded-3 bg-light">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-info-circle text-info me-2"></i>
-                <div>
-                    <strong>Check for Existing Records</strong>
-                    <p class="mb-0 small text-muted">
-                        To verify if this suspect has pending cases or criminal history, 
-                        enter the ID number above or search by name in 
-                        <a href="{{ url_for('suspects.search_suspects') }}">Suspect Database</a>.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> 
+                        <div class="row">
+                            <!-- ID Number Input -->
+                            <div class="col-md-6 mb-3">
+                                <label for="idNumber" class="form-label">ID Number *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="idNumber" 
+                                           name="id_number" 
+                                           maxlength="13" 
+                                           placeholder="Enter 13-digit ID number"
+                                           value="{{ suspect_form.id_number.data or '' }}"
+                                           {% if prefill_suspect %}readonly{% endif %}>
+                                </div>
+                            </div>
+                            
+                            <!-- Status/Warning Message -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Status</label>
+                                <div id="currentStatus" class="p-3 rounded-3 bg-light">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-info-circle text-info me-2"></i>
+                                        <div>
+                                            <strong>Check for Existing Records</strong>
+                                            <p class="mb-0 small text-muted">
+                                                To verify if this suspect has pending cases or criminal history, 
+                                                enter the ID number above or search by name in 
+                                                <a href="{{ url_for('suspects.search_suspects') }}">Suspect Database</a>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
 
                         <!-- Suspect Name Fields -->
                         <div class="row suspect-fields">
@@ -280,526 +300,260 @@
             </form>
         </div>
     </div>
-</div>
+    <!-- Original content ends -->
 
-<style>
-.step-indicator {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    margin-bottom: 30px;
-}
+    <!-- Keep all the original styles and scripts from create.html -->
+    <style>
+        /* (copy all CSS from original create.html) */
+        .step-indicator { display: flex; justify-content: space-between; position: relative; margin-bottom: 30px; }
+        .step { flex: 1; text-align: center; position: relative; cursor: pointer; padding: 10px; }
+        .step:not(:last-child)::after { content: ''; position: absolute; top: 25px; left: 50%; width: 100%; height: 2px; background: #dee2e6; z-index: -1; }
+        .step.completed:not(:last-child)::after { background: #28a745; }
+        .step-number { width: 50px; height: 50px; border-radius: 50%; background: #dee2e6; color: #6c757d; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-weight: bold; transition: all 0.3s; }
+        .step.active .step-number { background: #007bff; color: white; }
+        .step.completed .step-number { background: #28a745; color: white; }
+        .step-label { font-size: 0.9rem; color: #6c757d; }
+        .step.active .step-label { color: #007bff; font-weight: bold; }
+        .upload-area:hover { background-color: #f8f9fa; }
+        .upload-area.dragover { background-color: #e3f2fd; border-color: #2196f3 !important; }
+        input[readonly], textarea[readonly], select[disabled] {
+            background-color: #f8f9fa !important;
+            color: #6c757d !important;
+            border-color: #dee2e6 !important;
+            cursor: not-allowed !important;
+        }
+        #currentStatus { border-left: 4px solid; transition: all 0.3s ease; }
+        #currentStatus.using-existing { border-left-color: #28a745; background-color: rgba(40, 167, 69, 0.1); }
+        #currentStatus.new-suspect { border-left-color: #ffc107; background-color: rgba(255, 193, 7, 0.1); }
+        #currentStatus.unknown { border-left-color: #6c757d; background-color: rgba(108, 117, 125, 0.1); }
+    </style>
 
-.step {
-    flex: 1;
-    text-align: center;
-    position: relative;
-    cursor: pointer;
-    padding: 10px;
-}
+    <!-- Original scripts -->
+    <script>
+        // (copy all JavaScript from original create.html)
+        let foundSuspect = null;
+        let isUsingExistingSuspect = {{ 'true' if prefill_suspect else 'false' }};
 
-.step:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    top: 25px;
-    left: 50%;
-    width: 100%;
-    height: 2px;
-    background: #dee2e6;
-    z-index: -1;
-}
+        async function checkSuspect() {
+            const idNumber = document.getElementById('idNumber').value.trim();
+            if (idNumber.length !== 13) {
+                showToast('Please enter a valid 13-digit ID number', 'warning');
+                return;
+            }
+            if (document.getElementById('useExistingSuspect').value) {
+                showToast('Already using existing suspect profile', 'info');
+                return;
+            }
+            const checkBtn = document.getElementById('checkBtn');
+            const loadingDiv = document.getElementById('checkLoading');
+            checkBtn.disabled = true;
+            loadingDiv.style.display = 'block';
+            document.getElementById('suspectFoundAlert').style.display = 'none';
+            document.getElementById('suspectNotFoundAlert').style.display = 'none';
 
-.step.completed:not(:last-child)::after {
-    background: #28a745;
-}
+            try {
+                const response = await fetch('/api/check-suspect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_number: idNumber })
+                });
+                const data = await response.json();
+                if (data.exists) {
+                    foundSuspect = data.suspect;
+                    const alertDiv = document.getElementById('suspectFoundAlert');
+                    const detailsDiv = document.getElementById('suspectDetails');
+                    detailsDiv.innerHTML = `
+                        <div class="mb-1"><strong>Name:</strong> ${data.suspect.full_name}</div>
+                        <div class="mb-1"><strong>Active Cases:</strong> ${data.suspect.active_cases}</div>
+                        <div class="mb-1"><strong>Date of Birth:</strong> ${data.suspect.date_of_birth || 'Not specified'}</div>
+                        <div class="mb-1"><strong>Gender:</strong> ${data.suspect.gender ? data.suspect.gender.charAt(0).toUpperCase() + data.suspect.gender.slice(1) : 'Not specified'}</div>
+                    `;
+                    alertDiv.style.display = 'block';
+                    const useBtn = document.getElementById('useExistingBtn');
+                    if (useBtn) useBtn.onclick = useExistingSuspect;
+                    showToast('Suspect found in database! You can use existing profile.', 'success');
+                    updateStatusIndicator('found');
+                } else {
+                    document.getElementById('suspectNotFoundAlert').style.display = 'block';
+                    foundSuspect = null;
+                    enableSuspectFields();
+                    updateStatusIndicator('new');
+                    showToast('No existing suspect found. Please fill in suspect details.', 'info');
+                }
+            } catch (error) {
+                console.error('Error checking suspect:', error);
+                showToast('Error checking suspect. Please try again.', 'danger');
+            } finally {
+                checkBtn.disabled = false;
+                loadingDiv.style.display = 'none';
+            }
+        }
 
-.step-number {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: #dee2e6;
-    color: #6c757d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 10px;
-    font-weight: bold;
-    transition: all 0.3s;
-}
-
-.step.active .step-number {
-    background: #007bff;
-    color: white;
-}
-
-.step.completed .step-number {
-    background: #28a745;
-    color: white;
-}
-
-.step-label {
-    font-size: 0.9rem;
-    color: #6c757d;
-}
-
-.step.active .step-label {
-    color: #007bff;
-    font-weight: bold;
-}
-
-.upload-area:hover {
-    background-color: #f8f9fa;
-}
-
-.upload-area.dragover {
-    background-color: #e3f2fd;
-    border-color: #2196f3 !important;
-}
-
-/* Style for readonly/disabled fields when using existing suspect */
-input[readonly], textarea[readonly], select[disabled] {
-    background-color: #f8f9fa !important;
-    color: #6c757d !important;
-    border-color: #dee2e6 !important;
-    cursor: not-allowed !important;
-}
-
-/* Status indicator styles */
-#currentStatus {
-    border-left: 4px solid;
-    transition: all 0.3s ease;
-}
-
-#currentStatus.using-existing {
-    border-left-color: #28a745;
-    background-color: rgba(40, 167, 69, 0.1);
-}
-
-#currentStatus.new-suspect {
-    border-left-color: #ffc107;
-    background-color: rgba(255, 193, 7, 0.1);
-}
-
-#currentStatus.unknown {
-    border-left-color: #6c757d;
-    background-color: rgba(108, 117, 125, 0.1);
-}
-</style>
-{% endblock %}
-
-{% block scripts %}
-<script>
-// Store suspect data globally
-let foundSuspect = null;
-let isUsingExistingSuspect = {{ 'true' if prefill_suspect else 'false' }};
-
-// Check suspect in database
-async function checkSuspect() {
-    const idNumber = document.getElementById('idNumber').value.trim();
-    
-    if (idNumber.length !== 13) {
-        showToast('Please enter a valid 13-digit ID number', 'warning');
-        return;
-    }
-    
-    // If we're already using an existing suspect, don't check again
-    if (document.getElementById('useExistingSuspect').value) {
-        showToast('Already using existing suspect profile', 'info');
-        return;
-    }
-    
-    const checkBtn = document.getElementById('checkBtn');
-    const loadingDiv = document.getElementById('checkLoading');
-    
-    // Show loading state
-    checkBtn.disabled = true;
-    loadingDiv.style.display = 'block';
-    
-    // Hide previous alerts
-    document.getElementById('suspectFoundAlert').style.display = 'none';
-    document.getElementById('suspectNotFoundAlert').style.display = 'none';
-    
-    try {
-        const response = await fetch('/api/check-suspect', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id_number: idNumber })
-        });
-        
-        const data = await response.json();
-        
-        if (data.exists) {
-            foundSuspect = data.suspect;
-            
-            // Show suspect found alert
-            const alertDiv = document.getElementById('suspectFoundAlert');
-            const detailsDiv = document.getElementById('suspectDetails');
-            
-            detailsDiv.innerHTML = `
-                <div class="mb-1">
-                    <strong>Name:</strong> ${data.suspect.full_name}
-                </div>
-                <div class="mb-1">
-                    <strong>Active Cases:</strong> ${data.suspect.active_cases}
-                </div>
-                <div class="mb-1">
-                    <strong>Date of Birth:</strong> ${data.suspect.date_of_birth || 'Not specified'}
-                </div>
-                <div class="mb-1">
-                    <strong>Gender:</strong> ${data.suspect.gender ? data.suspect.gender.charAt(0).toUpperCase() + data.suspect.gender.slice(1) : 'Not specified'}
+        function useExistingSuspect() {
+            if (!foundSuspect) return;
+            document.getElementById('suspectFirstName').value = foundSuspect.first_name || '';
+            document.getElementById('suspectLastName').value = foundSuspect.last_name || '';
+            document.getElementById('idNumber').value = foundSuspect.id_number || '';
+            document.getElementById('dateOfBirth').value = foundSuspect.date_of_birth || '';
+            document.getElementById('gender').value = foundSuspect.gender || '';
+            document.getElementById('address').value = foundSuspect.address || '';
+            document.getElementById('contactNumber').value = foundSuspect.contact_number || '';
+            document.getElementById('useExistingSuspect').value = foundSuspect.id;
+            lockSuspectFields();
+            const photoUploadSection = document.getElementById('photoUploadSection');
+            if (photoUploadSection) photoUploadSection.style.display = 'none';
+            document.getElementById('suspectFoundAlert').innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    <div class="flex-grow-1">
+                        <strong>Using existing suspect profile:</strong> ${foundSuspect.full_name}
+                        <div class="small text-muted">All suspect fields are now locked. Photo will be used from existing profile.</div>
+                    </div>
                 </div>
             `;
-            
-            alertDiv.style.display = 'block';
-            
-            // Re-attach event listener to the button (since it might be new)
-            const useBtn = document.getElementById('useExistingBtn');
-            if (useBtn) {
-                useBtn.onclick = useExistingSuspect;
+            updateStatusIndicator('using');
+            showToast('Using existing suspect profile. Fields have been locked.', 'success');
+        }
+
+        function lockSuspectFields() {
+            const fields = ['suspectFirstName', 'suspectLastName', 'idNumber', 'dateOfBirth', 'gender', 'address', 'contactNumber'];
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    if (field.tagName === 'SELECT') field.disabled = true;
+                    else field.readOnly = true;
+                    field.classList.add('bg-light', 'text-muted');
+                }
+            });
+            isUsingExistingSuspect = true;
+        }
+
+        function enableSuspectFields() {
+            const fields = ['suspectFirstName', 'suspectLastName', 'idNumber', 'dateOfBirth', 'gender', 'address', 'contactNumber'];
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    if (field.tagName === 'SELECT') field.disabled = false;
+                    else field.readOnly = false;
+                    field.classList.remove('bg-light', 'text-muted');
+                }
+            });
+            const photoUploadSection = document.getElementById('photoUploadSection');
+            if (photoUploadSection) photoUploadSection.style.display = 'block';
+            document.getElementById('useExistingSuspect').value = '';
+            isUsingExistingSuspect = false;
+        }
+
+        function updateStatusIndicator(status) {
+            const statusDiv = document.getElementById('currentStatus');
+            const indicators = {
+                'using': { html: `<div class="d-flex align-items-center"><i class="fas fa-check-circle text-success me-2"></i><div><strong>Using existing suspect profile</strong><p class="mb-0 small text-muted">All fields are locked</p></div></div>`, className: 'p-3 rounded-3 using-existing' },
+                'found': { html: `<div class="d-flex align-items-center"><i class="fas fa-user-check text-warning me-2"></i><div><strong>Suspect found in database</strong><p class="mb-0 small text-muted">Click "Use this profile" to autofill</p></div></div>`, className: 'p-3 rounded-3 new-suspect' },
+                'new': { html: `<div class="d-flex align-items-center"><i class="fas fa-user-plus text-primary me-2"></i><div><strong>Creating new suspect profile</strong><p class="mb-0 small text-muted">Fill in suspect details below</p></div></div>`, className: 'p-3 rounded-3 new-suspect' },
+                'unknown': { html: `<div class="d-flex align-items-center"><i class="fas fa-question-circle text-warning me-2"></i><div><strong>Suspect status: Unknown</strong><p class="mb-0 small text-muted">Check ID number or enter new details</p></div></div>`, className: 'p-3 rounded-3 unknown' }
+            };
+            const indicator = indicators[status] || indicators['unknown'];
+            statusDiv.innerHTML = indicator.html;
+            statusDiv.className = indicator.className;
+        }
+
+        function removePhoto() {
+            document.getElementById('photoInput').value = '';
+            document.getElementById('photoPreview').style.display = 'none';
+            showToast('Photo removed', 'info');
+        }
+
+        function showToast(message, type = 'info') {
+            const existingToasts = document.querySelectorAll('.custom-toast');
+            existingToasts.forEach(toast => toast.remove());
+            const toast = document.createElement('div');
+            toast.className = `custom-toast alert alert-${type} alert-dismissible fade show position-fixed`;
+            toast.style.cssText = `top: 20px; right: 20px; z-index: 9999; min-width: 300px; animation: slideInRight 0.3s ease-out;`;
+            const icon = type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'danger' ? 'exclamation-circle' : 'info-circle';
+            toast.innerHTML = `<div class="d-flex align-items-center"><i class="fas fa-${icon} me-2"></i><div class="flex-grow-1">${message}</div><button type="button" class="btn-close ms-2" onclick="this.parentElement.parentElement.remove()"></button></div>`;
+            document.body.appendChild(toast);
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 5000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkBtn = document.getElementById('checkBtn');
+            if (checkBtn) checkBtn.addEventListener('click', checkSuspect);
+            const uploadArea = document.querySelector('.upload-area');
+            const photoInput = document.getElementById('photoInput');
+            if (uploadArea && photoInput) {
+                uploadArea.addEventListener('click', () => photoInput.click());
+                uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+                uploadArea.addEventListener('dragleave', () => { uploadArea.classList.remove('dragover'); });
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    if (e.dataTransfer.files.length) {
+                        photoInput.files = e.dataTransfer.files;
+                        handlePhotoUpload(e.dataTransfer.files[0]);
+                    }
+                });
+                photoInput.addEventListener('change', function(e) {
+                    if (e.target.files.length) handlePhotoUpload(e.target.files[0]);
+                });
             }
-            
-            showToast('Suspect found in database! You can use existing profile.', 'success');
-            updateStatusIndicator('found');
-        } else {
-            document.getElementById('suspectNotFoundAlert').style.display = 'block';
-            foundSuspect = null;
-            enableSuspectFields();
-            updateStatusIndicator('new');
-            showToast('No existing suspect found. Please fill in suspect details.', 'info');
-        }
-        
-    } catch (error) {
-        console.error('Error checking suspect:', error);
-        showToast('Error checking suspect. Please try again.', 'danger');
-    } finally {
-        checkBtn.disabled = false;
-        loadingDiv.style.display = 'none';
-    }
-}
-
-// Use existing suspect profile
-function useExistingSuspect() {
-    if (!foundSuspect) {
-        console.error('No suspect found to use');
-        return;
-    }
-    
-    console.log('Using existing suspect:', foundSuspect);
-    
-    // Fill all suspect fields with existing data
-    document.getElementById('suspectFirstName').value = foundSuspect.first_name || '';
-    document.getElementById('suspectLastName').value = foundSuspect.last_name || '';
-    document.getElementById('idNumber').value = foundSuspect.id_number || '';
-    document.getElementById('dateOfBirth').value = foundSuspect.date_of_birth || '';
-    document.getElementById('gender').value = foundSuspect.gender || '';
-    document.getElementById('address').value = foundSuspect.address || '';
-    document.getElementById('contactNumber').value = foundSuspect.contact_number || '';
-    
-    // Set hidden field with suspect ID - THIS IS CRITICAL
-    document.getElementById('useExistingSuspect').value = foundSuspect.id;
-    
-    // Lock all suspect fields
-    lockSuspectFields();
-    
-    // Hide photo upload section
-    const photoUploadSection = document.getElementById('photoUploadSection');
-    if (photoUploadSection) {
-        photoUploadSection.style.display = 'none';
-    }
-    
-    // Update the alert to show we're using the profile
-    document.getElementById('suspectFoundAlert').innerHTML = `
-        <div class="d-flex align-items-center">
-            <i class="fas fa-check-circle text-success me-2"></i>
-            <div class="flex-grow-1">
-                <strong>Using existing suspect profile:</strong> ${foundSuspect.full_name}
-                <div class="small text-muted">All suspect fields are now locked. Photo will be used from existing profile.</div>
-            </div>
-        </div>
-    `;
-    
-    updateStatusIndicator('using');
-    showToast('Using existing suspect profile. Fields have been locked.', 'success');
-}
-
-// Lock suspect fields
-function lockSuspectFields() {
-    const fields = [
-        'suspectFirstName', 'suspectLastName', 'idNumber', 
-        'dateOfBirth', 'gender', 'address', 'contactNumber'
-    ];
-    
-    fields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            if (field.tagName === 'SELECT') {
-                field.disabled = true;
-            } else {
-                field.readOnly = true;
+            function handlePhotoUpload(file) {
+                if (!file.type.match('image.*')) { showToast('Please upload an image file (JPG, PNG)', 'warning'); return; }
+                if (file.size > 5 * 1024 * 1024) { showToast('File size must be less than 5MB', 'warning'); return; }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                    document.getElementById('photoPreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+                showToast('Photo uploaded successfully', 'success');
             }
-            field.classList.add('bg-light', 'text-muted');
-        }
-    });
-    
-    isUsingExistingSuspect = true;
-}
-
-// Enable suspect fields (for new suspects)
-function enableSuspectFields() {
-    const fields = [
-        'suspectFirstName', 'suspectLastName', 'idNumber', 
-        'dateOfBirth', 'gender', 'address', 'contactNumber'
-    ];
-    
-    fields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            if (field.tagName === 'SELECT') {
-                field.disabled = false;
-            } else {
-                field.readOnly = false;
+            if (isUsingExistingSuspect) {
+                lockSuspectFields();
+                updateStatusIndicator('using');
             }
-            field.classList.remove('bg-light', 'text-muted');
-        }
-    });
-    
-    // Show photo upload section
-    const photoUploadSection = document.getElementById('photoUploadSection');
-    if (photoUploadSection) {
-        photoUploadSection.style.display = 'block';
-    }
-    
-    // Clear the hidden field
-    document.getElementById('useExistingSuspect').value = '';
-    isUsingExistingSuspect = false;
-}
-
-// Update status indicator
-function updateStatusIndicator(status) {
-    const statusDiv = document.getElementById('currentStatus');
-    
-    const indicators = {
-        'using': {
-            html: `<div class="d-flex align-items-center">
-                    <i class="fas fa-check-circle text-success me-2"></i>
-                    <div>
-                        <strong>Using existing suspect profile</strong>
-                        <p class="mb-0 small text-muted">All fields are locked</p>
-                    </div>
-                   </div>`,
-            className: 'p-3 rounded-3 using-existing'
-        },
-        'found': {
-            html: `<div class="d-flex align-items-center">
-                    <i class="fas fa-user-check text-warning me-2"></i>
-                    <div>
-                        <strong>Suspect found in database</strong>
-                        <p class="mb-0 small text-muted">Click "Use this profile" to autofill</p>
-                    </div>
-                   </div>`,
-            className: 'p-3 rounded-3 new-suspect'
-        },
-        'new': {
-            html: `<div class="d-flex align-items-center">
-                    <i class="fas fa-user-plus text-primary me-2"></i>
-                    <div>
-                        <strong>Creating new suspect profile</strong>
-                        <p class="mb-0 small text-muted">Fill in suspect details below</p>
-                    </div>
-                   </div>`,
-            className: 'p-3 rounded-3 new-suspect'
-        },
-        'unknown': {
-            html: `<div class="d-flex align-items-center">
-                    <i class="fas fa-question-circle text-warning me-2"></i>
-                    <div>
-                        <strong>Suspect status: Unknown</strong>
-                        <p class="mb-0 small text-muted">Check ID number or enter new details</p>
-                    </div>
-                   </div>`,
-            className: 'p-3 rounded-3 unknown'
-        }
-    };
-    
-    const indicator = indicators[status] || indicators['unknown'];
-    statusDiv.innerHTML = indicator.html;
-    statusDiv.className = indicator.className;
-}
-
-// Remove photo
-function removePhoto() {
-    document.getElementById('photoInput').value = '';
-    document.getElementById('photoPreview').style.display = 'none';
-    showToast('Photo removed', 'info');
-}
-
-// Toast notification
-function showToast(message, type = 'info') {
-    const existingToasts = document.querySelectorAll('.custom-toast');
-    existingToasts.forEach(toast => toast.remove());
-    
-    const toast = document.createElement('div');
-    toast.className = `custom-toast alert alert-${type} alert-dismissible fade show position-fixed`;
-    toast.style.cssText = `
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
-        min-width: 300px;
-        animation: slideInRight 0.3s ease-out;
-    `;
-    
-    const icon = type === 'success' ? 'check-circle' : 
-                 type === 'warning' ? 'exclamation-triangle' : 
-                 type === 'danger' ? 'exclamation-circle' : 'info-circle';
-    
-    toast.innerHTML = `
-        <div class="d-flex align-items-center">
-            <i class="fas fa-${icon} me-2"></i>
-            <div class="flex-grow-1">${message}</div>
-            <button type="button" class="btn-close ms-2" onclick="this.parentElement.parentElement.remove()"></button>
-        </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        if (toast.parentNode) toast.remove();
-    }, 5000);
-}
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    // Setup check button
-    const checkBtn = document.getElementById('checkBtn');
-    if (checkBtn) {
-        checkBtn.addEventListener('click', checkSuspect);
-    }
-    
-    // Setup photo upload
-    const uploadArea = document.querySelector('.upload-area');
-    const photoInput = document.getElementById('photoInput');
-    
-    if (uploadArea && photoInput) {
-        uploadArea.addEventListener('click', () => photoInput.click());
-        
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
+            document.getElementById('caseForm').addEventListener('submit', function(e) {
+                let isValid = true;
+                const idNumber = document.getElementById('idNumber').value.trim();
+                if (!idNumber || idNumber.length !== 13) {
+                    e.preventDefault();
+                    showToast('Please enter a valid 13-digit ID number', 'danger');
+                    document.getElementById('idNumber').focus();
+                    return false;
+                }
+                const requiredFields = [
+                    {id: 'suspectFirstName', name: 'First Name'},
+                    {id: 'suspectLastName', name: 'Last Name'},
+                    {id: 'title', name: 'Case Title'},
+                    {id: 'category', name: 'Category'},
+                    {id: 'severity', name: 'Severity'},
+                    {id: 'description', name: 'Description'}
+                ];
+                for (const field of requiredFields) {
+                    const element = document.getElementById(field.id);
+                    if (element && !element.value.trim()) {
+                        isValid = false;
+                        element.classList.add('is-invalid');
+                        showToast(`Please fill in the ${field.name} field`, 'warning');
+                        element.focus();
+                        break;
+                    } else if (element) element.classList.remove('is-invalid');
+                }
+                if (!isValid) { e.preventDefault(); return false; }
+                const submitBtn = this.querySelector('button[name="create_case"]');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating Case...';
+                }
+                const disabledSelects = this.querySelectorAll('select:disabled');
+                disabledSelects.forEach(field => field.disabled = false);
+                return true;
+            });
+            document.querySelectorAll('#caseForm input, #caseForm textarea, #caseForm select').forEach(field => {
+                field.addEventListener('input', function() {
+                    if (this.checkValidity()) this.classList.remove('is-invalid');
+                });
+            });
         });
-        
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-        
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length) {
-                photoInput.files = e.dataTransfer.files;
-                handlePhotoUpload(e.dataTransfer.files[0]);
-            }
-        });
-        
-        photoInput.addEventListener('change', function(e) {
-            if (e.target.files.length) {
-                handlePhotoUpload(e.target.files[0]);
-            }
-        });
-    }
-    
-    function handlePhotoUpload(file) {
-        if (!file.type.match('image.*')) {
-            showToast('Please upload an image file (JPG, PNG)', 'warning');
-            return;
-        }
-        
-        if (file.size > 5 * 1024 * 1024) {
-            showToast('File size must be less than 5MB', 'warning');
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('previewImage').src = e.target.result;
-            document.getElementById('photoPreview').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-        showToast('Photo uploaded successfully', 'success');
-    }
-    
-    // If page loaded with prefill_suspect, lock fields
-    if (isUsingExistingSuspect) {
-        lockSuspectFields();
-        updateStatusIndicator('using');
-    }
-    
-    // Form validation
-    document.getElementById('caseForm').addEventListener('submit', function(e) {
-        let isValid = true;
-        
-        // Validate ID number
-        const idNumber = document.getElementById('idNumber').value.trim();
-        if (!idNumber || idNumber.length !== 13) {
-            e.preventDefault();
-            showToast('Please enter a valid 13-digit ID number', 'danger');
-            document.getElementById('idNumber').focus();
-            return false;
-        }
-        
-        // Validate required fields
-        const requiredFields = [
-            {id: 'suspectFirstName', name: 'First Name'},
-            {id: 'suspectLastName', name: 'Last Name'},
-            {id: 'title', name: 'Case Title'},
-            {id: 'category', name: 'Category'},
-            {id: 'severity', name: 'Severity'},
-            {id: 'description', name: 'Description'}
-        ];
-        
-        for (const field of requiredFields) {
-            const element = document.getElementById(field.id);
-            if (element && !element.value.trim()) {
-                isValid = false;
-                element.classList.add('is-invalid');
-                showToast(`Please fill in the ${field.name} field`, 'warning');
-                element.focus();
-                break;
-            } else if (element) {
-                element.classList.remove('is-invalid');
-            }
-        }
-        
-        if (!isValid) {
-            e.preventDefault();
-            return false;
-        }
-        
-        // Disable submit button to prevent double submission
-        const submitBtn = this.querySelector('button[name="create_case"]');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating Case...';
-        }
-        
-        // Re-enable disabled fields before submission so values are sent
-        const disabledSelects = this.querySelectorAll('select:disabled');
-        disabledSelects.forEach(field => field.disabled = false);
-        
-        console.log('Submitting form with use_existing_suspect:', document.getElementById('useExistingSuspect').value);
-        
-        return true;
-    });
-    
-    // Real-time validation
-    document.querySelectorAll('#caseForm input, #caseForm textarea, #caseForm select').forEach(field => {
-        field.addEventListener('input', function() {
-            if (this.checkValidity()) {
-                this.classList.remove('is-invalid');
-            }
-        });
-    });
-});
-</script>
+    </script>
+</div>
 {% endblock %}

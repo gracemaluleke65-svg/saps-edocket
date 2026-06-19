@@ -1,15 +1,28 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - SAPS eDocket{% endblock %}
+{% block title %}Dashboard – SAPS eDocket{% endblock %}
+
+{% block page_header %}
+<div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
+    <div class="row py-5">
+        <div class="col-12 pt-lg-5 mt-lg-5 text-center">
+            <h1 class="display-4 text-white animated zoomIn">Officer Dashboard</h1>
+            <a href="{{ url_for('main.index') }}" class="h5 text-white">Home</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="#" class="h5 text-white">Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
 {% block extra_css %}
 <style>
     /* Dashboard Specific Styles */
     .welcome-section {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
+        background: linear-gradient(135deg, var(--saps-blue, #003f87), var(--saps-blue-dark, #002a5c));
         border-radius: 20px;
         padding: 2rem;
-        color: white;
+        color: #000 !important;  /* Force black text */
         position: relative;
         overflow: hidden;
         margin-bottom: 2rem;
@@ -17,17 +30,55 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    .welcome-section::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-        pointer-events: none;
+    /* Override all text in welcome section to black */
+    .welcome-section * {
+        color: #000 !important;
     }
     
+    /* Give badges a light background so they stand out */
+    .welcome-section .badge-display {
+        background: rgba(255, 255, 255, 0.85) !important;
+        border-color: rgba(0, 0, 0, 0.2) !important;
+        color: #000 !important;
+    }
+    
+    .welcome-section .badge-display i {
+        color: #000 !important;
+    }
+    
+    /* Officer status background and text */
+    .welcome-section .officer-status {
+        background: rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    .welcome-section .officer-status .text-light {
+        color: #000 !important;
+    }
+    
+    .welcome-section .officer-status .text-light strong {
+        color: #000 !important;
+    }
+    
+    .welcome-section .officer-status small {
+        color: #333 !important;
+    }
+    
+    .welcome-section .officer-status .status-indicator {
+        background: #28a745 !important;
+    }
+    
+    /* Ensure the heading and other text are black */
+    .welcome-section h1.display-5 {
+        color: #000 !important;
+    }
+    
+    .welcome-section .badge.bg-warning {
+        color: #000 !important;
+    }
+    
+    /* Quick actions card in the right side - already has white background, so text is fine */
+    
+    /* Existing styles below remain unchanged */
     .badge-display {
         background: rgba(255, 255, 255, 0.15);
         border: 2px solid rgba(255, 255, 255, 0.3);

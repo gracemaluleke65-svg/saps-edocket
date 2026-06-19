@@ -1,1082 +1,140 @@
 {% extends "base.html" %}
 
-{% block title %}Advanced Search - SAPS eDocket{% endblock %}
+{% block title %}Advanced Search – SAPS eDocket{% endblock %}
 
-{% block extra_css %}
-<style>
-    /* Search Page Specific Styles */
-    .search-hero {
-        background: linear-gradient(135deg, rgba(0, 63, 135, 0.05) 0%, rgba(212, 175, 55, 0.03) 100%);
-        border-radius: 20px;
-        padding: 3rem;
-        margin-bottom: 3rem;
-        position: relative;
-        overflow: hidden;
-        border: 1px solid rgba(0, 63, 135, 0.1);
-    }
-    
-    .search-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(0, 63, 135, 0.05) 0%, transparent 70%);
-        border-radius: 50%;
-    }
-    
-    .search-card {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 8px 30px rgba(0, 63, 135, 0.1);
-        border: 1px solid rgba(0, 63, 135, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow: hidden;
-    }
-    
-    .search-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0, 63, 135, 0.15);
-        border-color: var(--saps-blue);
-    }
-    
-    .search-input-group {
-        position: relative;
-    }
-    
-    .search-icon {
-        position: absolute;
-        left: 1.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--saps-blue);
-        z-index: 4;
-        font-size: 1.2rem;
-    }
-    
-    .search-input {
-        padding-left: 3.5rem !important;
-        padding-right: 4.5rem !important;
-        height: 60px;
-        font-size: 1.1rem;
-        border: 2px solid #e6f0ff;
-        border-radius: 12px;
-        background: #f8fafc;
-        transition: all 0.3s ease;
-    }
-    
-    .search-input:focus {
-        border-color: var(--saps-blue);
-        box-shadow: 0 0 0 0.25rem rgba(0, 63, 135, 0.15);
-        background: white;
-        transform: translateY(-2px);
-    }
-    
-    .search-type-select {
-        position: absolute;
-        right: 1.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-        border: none;
-        background: transparent;
-        color: var(--saps-blue);
-        font-weight: 600;
-        z-index: 4;
-        padding-right: 1.5rem;
-        cursor: pointer;
-    }
-    
-    .search-type-select:focus {
-        outline: none;
-    }
-    
-    .search-btn {
-        height: 60px;
-        padding: 0 2.5rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        border-radius: 12px;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-    
-    .search-btn::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        transition: width 0.6s, height 0.6s;
-    }
-    
-    .search-btn:hover::before {
-        width: 300px;
-        height: 300px;
-    }
-    
-    .search-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(0, 63, 135, 0.2);
-    }
-    
-    /* Advanced Filters */
-    .advanced-filters {
-        background: white;
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin-top: 1.5rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e6f0ff;
-        transition: all 0.3s ease;
-    }
-    
-    .advanced-filters.collapsed {
-        max-height: 0;
-        overflow: hidden;
-        padding: 0;
-        margin: 0;
-        border: none;
-    }
-    
-    .filter-btn {
-        background: transparent;
-        border: 2px solid #e6f0ff;
-        color: var(--saps-blue);
-        padding: 0.5rem 1.5rem;
-        border-radius: 20px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-    }
-    
-    .filter-btn:hover {
-        background: var(--saps-blue-light);
-        border-color: var(--saps-blue);
-        transform: translateY(-2px);
-    }
-    
-    .filter-btn.active {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        border-color: var(--saps-blue);
-    }
-    
-    /* Result Cards */
-    .result-card {
-        background: white;
-        border-radius: 16px;
-        border: 2px solid transparent;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .result-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4px;
-        height: 100%;
-        background: linear-gradient(180deg, var(--saps-blue), var(--saps-gold));
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    
-    .result-card:hover {
-        transform: translateY(-5px) translateX(5px);
-        box-shadow: 0 15px 35px rgba(0, 63, 135, 0.15);
-        border-color: var(--saps-blue-light);
-    }
-    
-    .result-card:hover::before {
-        opacity: 1;
-    }
-    
-    .result-card.suspect-card:hover {
-        border-color: var(--saps-gold);
-    }
-    
-    .result-card.case-card:hover {
-        border-color: var(--saps-blue);
-    }
-    
-    .suspect-avatar {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        border: 3px solid var(--saps-blue-light);
-        background: linear-gradient(135deg, #f8fafc, #e6f0ff);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: var(--saps-blue);
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-    
-    .result-card:hover .suspect-avatar {
-        transform: scale(1.1);
-        border-color: var(--saps-gold);
-        box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
-    }
-    
-    .suspect-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    .case-number-badge {
-        background: linear-gradient(135deg, var(--saps-blue-light), rgba(0, 63, 135, 0.1));
-        color: var(--saps-blue);
-        font-weight: 700;
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        font-family: 'Courier New', monospace;
-        letter-spacing: 0.5px;
-        border: 1px solid rgba(0, 63, 135, 0.2);
-        transition: all 0.3s ease;
-    }
-    
-    .result-card:hover .case-number-badge {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        transform: scale(1.05);
-    }
-    
-    /* Quick Actions */
-    .quick-action-btn {
-        background: transparent;
-        border: 2px solid #e6f0ff;
-        color: var(--saps-blue);
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        margin-left: 0.5rem;
-    }
-    
-    .quick-action-btn:hover {
-        background: var(--saps-blue);
-        color: white;
-        border-color: var(--saps-blue);
-        transform: scale(1.1) rotate(5deg);
-    }
-    
-    /* No Results */
-    .no-results {
-        background: linear-gradient(135deg, #f8fafc, #e6f0ff);
-        border-radius: 16px;
-        padding: 3rem;
-        text-align: center;
-        border: 2px dashed #cbd5e1;
-    }
-    
-    .no-results-icon {
-        width: 100px;
-        height: 100px;
-        background: linear-gradient(135deg, var(--saps-blue-light), #e6f0ff);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-        font-size: 3rem;
-        color: var(--saps-blue);
-    }
-    
-    /* Search Stats */
-    .search-stats {
-        background: white;
-        border-radius: 16px;
-        padding: 1rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.5rem;
-        border: 1px solid #e6f0ff;
-    }
-    
-    .stat-item {
-        text-align: center;
-        padding: 1rem;
-        border-right: 1px solid #e6f0ff;
-    }
-    
-    .stat-item:last-child {
-        border-right: none;
-    }
-    
-    .stat-value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--saps-blue);
-        line-height: 1;
-        margin-bottom: 0.5rem;
-    }
-    
-    .stat-label {
-        font-size: 0.85rem;
-        color: var(--saps-gray-dark);
-        font-weight: 500;
-    }
-    
-    /* Recent Searches */
-    .recent-search-tag {
-        background: var(--saps-blue-light);
-        color: var(--saps-blue);
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        margin-right: 0.5rem;
-        margin-bottom: 0.5rem;
-        display: inline-flex;
-        align-items: center;
-        border: 1px solid rgba(0, 63, 135, 0.2);
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    
-    .recent-search-tag:hover {
-        background: var(--saps-blue);
-        color: white;
-        transform: translateY(-2px);
-    }
-    
-    /* Quick Filters */
-    .quick-filter {
-        display: inline-flex;
-        align-items: center;
-        background: white;
-        border: 2px solid #e6f0ff;
-        padding: 0.6rem 1.2rem;
-        border-radius: 25px;
-        margin: 0 0.5rem 0.5rem 0;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    
-    .quick-filter:hover {
-        border-color: var(--saps-blue);
-        background: var(--saps-blue-light);
-        transform: translateY(-2px);
-    }
-    
-    .quick-filter.active {
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-blue-dark));
-        color: white;
-        border-color: var(--saps-blue);
-    }
-    
-    /* Loading Animation */
-    .search-loading {
-        display: none;
-        text-align: center;
-        padding: 2rem;
-    }
-    
-    .loading-pulse {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--saps-blue), var(--saps-gold));
-        margin: 0 auto 1rem;
-        animation: pulse 1.5s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { transform: scale(0.8); opacity: 0.5; }
-        50% { transform: scale(1); opacity: 1; }
-        100% { transform: scale(0.8); opacity: 0.5; }
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .search-hero {
-            padding: 2rem 1rem;
-        }
-        
-        .search-input {
-            height: 50px;
-            font-size: 1rem;
-        }
-        
-        .search-btn {
-            height: 50px;
-            padding: 0 1.5rem;
-        }
-        
-        .stat-item {
-            padding: 0.5rem;
-            border-right: none;
-            border-bottom: 1px solid #e6f0ff;
-        }
-        
-        .stat-item:last-child {
-            border-bottom: none;
-        }
-        
-        .quick-action-btn {
-            width: 35px;
-            height: 35px;
-            margin-left: 0.25rem;
-        }
-    }
-    
-    /* Dark mode support */
-    @media (prefers-color-scheme: dark) {
-        .search-card,
-        .advanced-filters,
-        .result-card,
-        .search-stats {
-            background: #1e293b;
-            border-color: #334155;
-        }
-        
-        .search-input {
-            background: #0f172a;
-            border-color: #334155;
-            color: white;
-        }
-        
-        .suspect-avatar {
-            background: #334155;
-            border-color: #475569;
-        }
-        
-        .no-results {
-            background: #1e293b;
-            border-color: #475569;
-        }
-    }
-</style>
-{% endblock %}
-
-{% block content %}
-<div class="container py-4 py-lg-5">
-    <!-- Search Hero Section -->
-    <div class="search-hero mb-5">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <div class="mb-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-primary-gradient rounded-3 p-2 me-3">
-                            <i class="fas fa-search fa-2x text-white"></i>
-                        </div>
-                        <h1 class="display-5 fw-bold text-primary mb-0">Advanced System Search</h1>
-                    </div>
-                    <p class="lead text-dark mb-4">
-                        Search across cases, suspects, and incident reports with biometric filtering and intelligent matching.
-                    </p>
-                </div>
-                
-                <!-- Quick Filters -->
-                <div class="mb-4">
-                    <p class="text-muted mb-2 small">
-                        <i class="fas fa-bolt me-1"></i> Quick Filters:
-                    </p>
-                    <div class="d-flex flex-wrap">
-                        <div class="quick-filter" data-filter="open-cases">
-                            <i class="fas fa-folder-open me-2"></i> Open Cases
-                        </div>
-                        <div class="quick-filter" data-filter="high-severity">
-                            <i class="fas fa-exclamation-triangle me-2"></i> High Severity
-                        </div>
-                        <div class="quick-filter" data-filter="active-suspects">
-                            <i class="fas fa-user-secret me-2"></i> Active Suspects
-                        </div>
-                        <div class="quick-filter" data-filter="recent">
-                            <i class="fas fa-clock me-2"></i> Recent 24h
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Recent Searches -->
-                {% if session.get('recent_searches') %}
-                <div class="mb-3">
-                    <p class="text-muted mb-2 small">
-                        <i class="fas fa-history me-1"></i> Recent Searches:
-                    </p>
-                    <div class="d-flex flex-wrap">
-                        {% for search in session.get('recent_searches', [])[:5] %}
-                        <span class="recent-search-tag" onclick="fillSearch('{{ search.query }}', '{{ search.type }}')">
-                            {{ search.query }}
-                            <small class="ms-1 opacity-75">({{ search.type }})</small>
-                        </span>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="position-relative">
-                    <div class="search-card p-4">
-                        <form method="POST" action="{{ url_for('main.search') }}" id="searchForm">
-                            {{ form.hidden_tag() }}
-                            
-                            <div class="search-input-group mb-3">
-                                <i class="search-icon fas fa-search"></i>
-                                {{ form.query(class="form-control search-input", 
-                                    placeholder="Enter case number, suspect name, ID number, or keywords...",
-                                    id="searchQuery",
-                                    autocomplete="off") }}
-                                
-                                <select class="search-type-select" id="searchTypeSelect" onchange="updateSearchType()">
-                                    <option value="case">Cases</option>
-                                    <option value="suspect">Suspects</option>
-                                    <option value="all">All</option>
-                                </select>
-                                
-                                <!-- Hidden field for actual search type -->
-                                <input type="hidden" name="search_type" id="searchTypeInput" value="{{ form.search_type.data }}">
-                            </div>
-                            
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-saps search-btn">
-                                    <i class="fas fa-search me-2"></i> Execute Search
-                                </button>
-                            </div>
-                            
-                            <div class="text-center mt-3">
-                                <button type="button" class="btn btn-link text-decoration-none p-0" 
-                                        onclick="toggleAdvancedFilters()">
-                                    <i class="fas fa-sliders-h me-1"></i> Advanced Filters
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    
-                    <!-- Advanced Filters -->
-                    <div class="advanced-filters collapsed" id="advancedFilters">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label small fw-semibold">Case Status</label>
-                                <div class="d-flex flex-wrap gap-2">
-                                    <button type="button" class="filter-btn" data-status="open">Open</button>
-                                    <button type="button" class="filter-btn" data-status="investigating">Investigating</button>
-                                    <button type="button" class="filter-btn" data-status="closed">Closed</button>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label small fw-semibold">Severity</label>
-                                <div class="d-flex flex-wrap gap-2">
-                                    <button type="button" class="filter-btn" data-severity="low">Low</button>
-                                    <button type="button" class="filter-btn" data-severity="medium">Medium</button>
-                                    <button type="button" class="filter-btn" data-severity="high">High</button>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label small fw-semibold">Date Range</label>
-                                <div class="d-flex gap-2">
-                                    <input type="date" class="form-control form-control-sm" id="dateFrom">
-                                    <input type="date" class="form-control form-control-sm" id="dateTo">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Loading State -->
-    <div class="search-loading" id="searchLoading">
-        <div class="loading-pulse"></div>
-        <p class="text-muted">Searching database...</p>
-    </div>
-
-    <!-- Results Section -->
-    <div id="resultsSection" {% if not form.is_submitted() %}style="display: none;"{% endif %}>
-        <!-- Search Stats -->
-        {% if form.is_submitted() and results %}
-        <div class="search-stats mb-4 animate__animated animate__fadeIn">
-            <div class="row g-0">
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-value" id="resultCount">{{ results|length }}</div>
-                        <div class="stat-label">Total Results</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-value" id="suspectCount">
-                            {% if search_type == 'suspect' %}{{ results|length }}{% else %}0{% endif %}
-                        </div>
-                        <div class="stat-label">Suspects</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-value" id="caseCount">
-                            {% if search_type == 'case' %}{{ results|length }}{% else %}0{% endif %}
-                        </div>
-                        <div class="stat-label">Cases</div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="stat-item">
-                        <div class="stat-value">
-                            {{ current_user.badge_number[:3] }}
-                        </div>
-                        <div class="stat-label">Your Badge</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        <!-- Results Header -->
-        {% if form.is_submitted() %}
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold text-primary mb-0">
-                <i class="fas fa-search me-2"></i>
-                Search Results
-                {% if form.query.data %}
-                <span class="text-muted fs-5 fw-normal ms-2">for "{{ form.query.data }}"</span>
-                {% endif %}
-            </h3>
-            
-            {% if results %}
-            <div class="d-flex align-items-center">
-                <span class="badge bg-primary-gradient px-3 py-2">
-                    <i class="fas fa-database me-1"></i>
-                    {{ results|length }} {{ search_type }}(s) found
-                </span>
-            </div>
-            {% endif %}
-        </div>
-        {% endif %}
-
-        <!-- Results Grid -->
-        <div id="resultsGrid">
-            {% if form.is_submitted() %}
-                {% if results %}
-                    {% if search_type == 'suspect' %}
-                        <!-- Suspect Results -->
-                        <div class="row g-4">
-                            {% for suspect in results %}
-                            <div class="col-lg-6">
-                                <div class="result-card suspect-card animate__animated animate__fadeInUp" 
-                                     style="animation-delay: {{ loop.index0 * 0.1 }}s;">
-                                    <div class="row g-3 align-items-center">
-                                        <div class="col-auto">
-                                            <div class="suspect-avatar">
-                                                {% if suspect.photo_path %}
-                                                <img src="{{ url_for('static', filename=suspect.photo_path) }}" 
-                                                     alt="{{ suspect.full_name }}">
-                                                {% else %}
-                                                <i class="fas fa-user-secret"></i>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                <h5 class="fw-bold mb-0">{{ suspect.full_name }}</h5>
-                                                {% if suspect.active_cases > 0 %}
-                                                <span class="badge bg-warning text-dark">
-                                                    <i class="fas fa-exclamation-triangle me-1"></i>
-                                                    {{ suspect.active_cases }} active case(s)
-                                                </span>
-                                                {% endif %}
-                                            </div>
-                                            <div class="mb-3">
-                                                <div class="d-flex flex-wrap gap-3 small text-muted">
-                                                    <span><i class="fas fa-id-card me-1"></i> {{ suspect.id_number }}</span>
-                                                    <span><i class="fas fa-venus-mars me-1"></i> {{ suspect.gender|title if suspect.gender else 'Unknown' }}</span>
-                                                    {% if suspect.date_of_birth %}
-                                                    <span><i class="fas fa-birthday-cake me-1"></i> {{ suspect.date_of_birth.strftime('%Y-%m-%d') }}</span>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            {% if suspect.face_encoding_path %}
-                                            <div class="mb-3">
-                                                <span class="badge bg-success bg-gradient">
-                                                    <i class="fas fa-robot me-1"></i> Face Recognition Profile
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                            <div class="d-flex gap-2">
-                                                <a href="{{ url_for('suspects.view_suspect', suspect_id=suspect.id) }}" 
-                                                   class="btn btn-saps btn-sm">
-                                                    <i class="fas fa-eye me-1"></i> View Profile
-                                                </a>
-                                                <div class="d-flex">
-                                                    <button class="quick-action-btn" 
-                                                            onclick="checkFaceMatches({{ suspect.id }})"
-                                                            title="Check face matches">
-                                                        <i class="fas fa-camera"></i>
-                                                    </button>
-                                                    <button class="quick-action-btn"
-                                                            onclick="createNewCaseForSuspect({{ suspect.id }})"
-                                                            title="New Case">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
-                                                    <button class="quick-action-btn"
-                                                            onclick="viewSuspectCases({{ suspect.id }})"
-                                                            title="View Cases">
-                                                        <i class="fas fa-folder-open"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <!-- Case Results -->
-                        <div class="row g-4">
-                            {% for case in results %}
-                            <div class="col-lg-6">
-                                <div class="result-card case-card animate__animated animate__fadeInUp" 
-                                     style="animation-delay: {{ loop.index0 * 0.1 }}s;">
-                                    <div class="d-flex justify-content-between align-items-start mb-3">
-                                        <div>
-                                            <span class="case-number-badge">{{ case.case_number }}</span>
-                                            <span class="status-badge status-{{ case.status }} ms-2">
-                                                {{ case.status.replace('_', ' ')|title }}
-                                            </span>
-                                        </div>
-                                        <span class="badge bg-{{ case.severity == 'high' and 'danger' or case.severity == 'medium' and 'warning' or 'info' }}">
-                                            {{ case.severity|title }}
-                                        </span>
-                                    </div>
-                                    
-                                    <h5 class="fw-bold mb-2">{{ case.title }}</h5>
-                                    
-                                    <p class="text-muted mb-3 small">{{ case.description|truncate(150) }}</p>
-                                    
-                                    <div class="row g-2 mb-3">
-                                        <div class="col-6">
-                                            <div class="d-flex align-items-center text-muted small">
-                                                <i class="fas fa-user-shield me-2"></i>
-                                                <span>{{ case.assigned_officer.full_name }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="d-flex align-items-center text-muted small">
-                                                <i class="fas fa-map-marker-alt me-2"></i>
-                                                <span>{{ case.location|truncate(20) if case.location else 'No location' }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="small text-muted">
-                                            <i class="fas fa-calendar me-1"></i>
-                                            {{ case.incident_date.strftime('%Y-%m-%d') if case.incident_date else 'No date' }}
-                                        </div>
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ url_for('cases.view_case', case_id=case.id) }}" 
-                                               class="btn btn-saps btn-sm">
-                                                <i class="fas fa-external-link-alt me-1"></i> Open
-                                            </a>
-                                            {% if case.suspect %}
-                                            <a href="{{ url_for('suspects.view_suspect', suspect_id=case.suspect.id) }}" 
-                                               class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-user-secret me-1"></i> Suspect
-                                            </a>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% else %}
-                    <!-- No Results -->
-                    <div class="no-results animate__animated animate__fadeIn">
-                        <div class="no-results-icon">
-                            <i class="fas fa-search-minus"></i>
-                        </div>
-                        <h4 class="fw-bold text-primary mb-3">No Results Found</h4>
-                        <p class="text-muted mb-4">
-                            We couldn't find any {{ search_type }} matching "{{ form.query.data }}".
-                        </p>
-                        <div class="row g-3 justify-content-center">
-                            <div class="col-md-4">
-                                <div class="card border-0 bg-blue-light p-3 text-center hover-scale">
-                                    <i class="fas fa-lightbulb fa-2x text-warning mb-3"></i>
-                                    <h6>Try Different Keywords</h6>
-                                    <p class="small text-muted">Use specific names, ID numbers, or case numbers</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card border-0 bg-blue-light p-3 text-center hover-scale">
-                                    <i class="fas fa-filter fa-2x text-primary mb-3"></i>
-                                    <h6>Check Your Filters</h6>
-                                    <p class="small text-muted">Verify search type and advanced filters</p>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card border-0 bg-blue-light p-3 text-center hover-scale">
-                                    <i class="fas fa-redo fa-2x text-success mb-3"></i>
-                                    <h6>Broaden Your Search</h6>
-                                    <p class="small text-muted">Try fewer keywords or search "All" categories</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Empty State (When No Search) -->
-    <div id="emptyState" class="text-center py-5 {% if form.is_submitted() %}d-none{% endif %}">
-        <div class="mb-4">
-            <i class="fas fa-search fa-4x text-primary opacity-25 mb-4"></i>
-            <h3 class="fw-bold text-primary mb-3">Ready to Search</h3>
-            <p class="text-muted mb-4 mx-auto" style="max-width: 600px;">
-                Enter a search term above to find cases, suspects, or incident reports.<br>
-                Use advanced filters for more precise results.
-            </p>
-        </div>
-        
-        <div class="row g-4 justify-content-center">
-            <div class="col-md-3">
-                <div class="card border-0 bg-blue-light p-3 text-center hover-lift">
-                    <i class="fas fa-id-card fa-2x text-primary mb-3"></i>
-                    <h6>By ID Number</h6>
-                    <p class="small text-muted">Search suspects by 13-digit ID</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 bg-blue-light p-3 text-center hover-lift">
-                    <i class="fas fa-folder fa-2x text-primary mb-3"></i>
-                    <h6>By Case Number</h6>
-                    <p class="small text-muted">Find specific cases instantly</p>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 bg-blue-light p-3 text-center hover-lift">
-                    <i class="fas fa-user-tag fa-2x text-primary mb-3"></i>
-                    <h6>By Name</h6>
-                    <p class="small text-muted">Search suspects or officers</p>
-                </div>
-            </div>
+{% block page_header %}
+<div class="container-fluid bg-primary py-5 bg-header" style="margin-bottom: 90px;">
+    <div class="row py-5">
+        <div class="col-12 pt-lg-5 mt-lg-5 text-center">
+            <h1 class="display-4 text-white animated zoomIn">Advanced Search</h1>
+            <a href="{{ url_for('main.index') }}" class="h5 text-white">Home</a>
+            <i class="far fa-circle text-white px-2"></i>
+            <a href="#" class="h5 text-white">Search</a>
         </div>
     </div>
 </div>
 {% endblock %}
 
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Set initial search type
-    updateSearchType();
-    
-    // Quick filter buttons
-    document.querySelectorAll('.quick-filter').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.quick-filter').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const filter = this.dataset.filter;
-            applyQuickFilter(filter);
-        });
-    });
-    
-    // Filter buttons for advanced filters
-    document.querySelectorAll('.filter-btn[data-status]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            this.classList.toggle('active');
-        });
-    });
-    
-    document.querySelectorAll('.filter-btn[data-severity]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            this.classList.toggle('active');
-        });
-    });
-    
-    // Real-time search with debounce
-    const searchInput = document.getElementById('searchQuery');
-    let searchTimeout;
-    
-    searchInput.addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        
-        // Show loading state if input is long enough
-        if (this.value.length >= 3) {
-            searchTimeout = setTimeout(() => {
-                performRealTimeSearch(this.value);
-            }, 500);
-        }
-    });
-    
-    // Form submission with loading state
-    document.getElementById('searchForm').addEventListener('submit', function(e) {
-        const query = document.getElementById('searchQuery').value.trim();
-        if (query.length < 2) {
-            e.preventDefault();
-            showToast('Please enter at least 2 characters', 'warning');
-            return;
-        }
-        
-        // Show loading
-        document.getElementById('searchLoading').style.display = 'block';
-        document.getElementById('resultsSection').style.display = 'none';
-        document.getElementById('emptyState').classList.add('d-none');
-        
-        // Store in recent searches
-        addToRecentSearches(query, document.getElementById('searchTypeSelect').value);
-    });
-});
-
-function updateSearchType() {
-    const select = document.getElementById('searchTypeSelect');
-    const hiddenInput = document.getElementById('searchTypeInput');
-    hiddenInput.value = select.value;
-}
-
-function toggleAdvancedFilters() {
-    const filters = document.getElementById('advancedFilters');
-    filters.classList.toggle('collapsed');
-}
-
-function fillSearch(query, type) {
-    document.getElementById('searchQuery').value = query;
-    document.getElementById('searchTypeSelect').value = type;
-    updateSearchType();
-    
-    // Trigger form submission
-    setTimeout(() => {
-        document.getElementById('searchForm').dispatchEvent(new Event('submit'));
-    }, 100);
-}
-
-function applyQuickFilter(filter) {
-    const queryMap = {
-        'open-cases': 'status:open',
-        'high-severity': 'severity:high',
-        'active-suspects': 'active:true',
-        'recent': 'date:last24h'
-    };
-    
-    const query = queryMap[filter];
-    if (query) {
-        document.getElementById('searchQuery').value = query;
-        document.getElementById('searchTypeSelect').value = filter.includes('case') ? 'case' : 'suspect';
-        updateSearchType();
-        
-        // Simulate search
-        performRealTimeSearch(query);
-    }
-}
-
-async function performRealTimeSearch(query) {
-    if (query.length < 2) return;
-    
-    try {
-        // This would call your real search API endpoint
-        // For now, we'll just show a loading state
-        document.getElementById('searchLoading').style.display = 'block';
-        
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // Hide loading
-        document.getElementById('searchLoading').style.display = 'none';
-        
-        // Note: In a real implementation, you would update the results grid here
-        // with data from your API endpoint
-        
-    } catch (error) {
-        console.error('Search error:', error);
-        showToast('Search failed', 'danger');
-        document.getElementById('searchLoading').style.display = 'none';
-    }
-}
-
-function addToRecentSearches(query, type) {
-    // Get existing searches or initialize
-    let recentSearches = JSON.parse(localStorage.getItem('saps_recent_searches') || '[]');
-    
-    // Remove if already exists
-    recentSearches = recentSearches.filter(s => !(s.query === query && s.type === type));
-    
-    // Add to beginning
-    recentSearches.unshift({
-        query: query,
-        type: type,
-        timestamp: new Date().toISOString()
-    });
-    
-    // Keep only last 10
-    recentSearches = recentSearches.slice(0, 10);
-    
-    // Save
-    localStorage.setItem('saps_recent_searches', JSON.stringify(recentSearches));
-    
-    // Update UI
-    updateRecentSearchesUI(recentSearches);
-}
-
-function updateRecentSearchesUI(searches) {
-    const container = document.querySelector('.recent-search-tags');
-    if (!container) return;
-    
-    container.innerHTML = searches.map(search => `
-        <span class="recent-search-tag" onclick="fillSearch('${search.query}', '${search.type}')">
-            ${search.query}
-            <small class="ms-1 opacity-75">(${search.type})</small>
-        </span>
-    `).join('');
-}
-
-// Quick action functions
-function checkFaceMatches(suspectId) {
-    showToast('Checking face matches...', 'info');
-    // In real implementation, this would trigger face matching
-}
-
-function createNewCaseForSuspect(suspectId) {
-    window.location.href = `/cases/create?suspect_id=${suspectId}`;
-}
-
-function viewSuspectCases(suspectId) {
-    window.location.href = `/suspects/${suspectId}`;
-}
-
-// Toast notification
-function showToast(message, type = 'info') {
-    const toast = document.createElement('div');
-    toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-    toast.style.cssText = `
-        top: 20px;
-        right: 20px;
-        z-index: 1060;
-        min-width: 300px;
-        animation: slideInRight 0.3s ease-out;
-    `;
-    toast.innerHTML = `
-        <div class="d-flex align-items-center">
-            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
-            <div>${message}</div>
-            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+{% block content %}
+<!-- Search Form -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <form method="POST" action="{{ url_for('main.search') }}" id="searchForm">
+                        {{ form.hidden_tag() }}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="searchQuery" name="{{ form.query.name }}" placeholder="Search term" value="{{ form.query.data or '' }}" required>
+                                    <label for="searchQuery"><i class="fas fa-search me-2"></i>Search Query</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <select class="form-select" id="searchType" name="{{ form.search_type.name }}">
+                                        <option value="suspect" {% if form.search_type.data == 'suspect' %}selected{% endif %}>Suspects</option>
+                                        <option value="case" {% if form.search_type.data == 'case' %}selected{% endif %}>Cases</option>
+                                    </select>
+                                    <label for="searchType">Search Type</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100 py-3">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.remove();
-    }, 4000);
+    </div>
+
+    <!-- Results Section -->
+    {% if form.is_submitted() %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-4">Search Results for "{{ form.query.data }}"</h3>
+            {% if results %}
+                <div class="row g-4">
+                    {% for item in results %}
+                        {% if search_type == 'suspect' %}
+                            <!-- Suspect Card -->
+                            <div class="col-lg-6 col-md-12">
+                                <div class="card h-100 border-0 shadow-sm hover-lift">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                                <i class="fas fa-user-secret fa-2x text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="mb-1">{{ item.full_name }}</h5>
+                                                <span class="badge bg-secondary">{{ item.id_number }}</span>
+                                            </div>
+                                        </div>
+                                        <p class="card-text text-muted small">
+                                            <i class="fas fa-venus-mars me-1"></i> {{ item.gender|title if item.gender else 'Unknown' }}
+                                            {% if item.date_of_birth %}
+                                            <i class="fas fa-birthday-cake ms-3 me-1"></i> {{ item.date_of_birth.strftime('%Y-%m-%d') }}
+                                            {% endif %}
+                                            <span class="ms-3"><i class="fas fa-folder-open me-1"></i> {{ item.active_cases }} active case(s)</span>
+                                        </p>
+                                        <a href="{{ url_for('suspects.view_suspect', suspect_id=item.id) }}" class="btn btn-outline-primary btn-sm">View Profile</a>
+                                        <a href="{{ url_for('cases.create_case') }}?suspect_id={{ item.id }}" class="btn btn-primary btn-sm">New Case</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <!-- Case Card -->
+                            <div class="col-lg-6 col-md-12">
+                                <div class="card h-100 border-0 shadow-sm hover-lift">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h5 class="card-title mb-0">{{ item.case_number }}</h5>
+                                            <span class="status-badge status-{{ item.status }}">{{ item.status.replace('_', ' ')|title }}</span>
+                                        </div>
+                                        <h6 class="card-subtitle mb-2 text-primary">{{ item.title }}</h6>
+                                        <p class="card-text text-muted small">{{ item.description|truncate(100) }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small><i class="fas fa-user-shield me-1"></i>{{ item.assigned_officer.full_name }}</small>
+                                            <small><i class="fas fa-calendar me-1"></i>{{ item.incident_date.strftime('%Y-%m-%d') if item.incident_date else 'N/A' }}</small>
+                                        </div>
+                                        <a href="{{ url_for('cases.view_case', case_id=item.id) }}" class="btn btn-outline-primary btn-sm mt-3">View Case</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">No results found.</div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-</script>
+.hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+}
+.status-badge {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.status-open { background: #e3f2fd; color: #1565c0; }
+.status-investigating { background: #fff3e0; color: #e65100; }
+.status-in_court { background: #f3e5f5; color: #7b1fa2; }
+.status-closed { background: #e8f5e9; color: #2e7d32; }
+.status-archived { background: #eceff1; color: #455a64; }
+</style>
 {% endblock %}

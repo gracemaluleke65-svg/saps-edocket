@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from app import db
+from extensions import db  # <-- changed from 'from app import db'
 from src.models import Officer
 from src.forms import RegistrationForm, LoginForm
 import re
